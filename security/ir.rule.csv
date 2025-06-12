@@ -1,0 +1,7 @@
+id,name,model_id:id,domain_force,groups:id,perm_read,perm_write,perm_create,perm_unlink
+queue_token_rule_user,Queue Token Rule User,model_queue_token,"['|', ('create_uid', '=', user.id), ('state', '!=', 'draft')]",group_queue_user,1,1,1,0
+queue_token_rule_manager,Queue Token Rule Manager,model_queue_token,[],group_queue_manager,1,1,1,1
+queue_room_rule_user,Queue Room Rule User,model_queue_room,[],group_queue_user,1,1,0,0
+queue_room_rule_manager,Queue Room Rule Manager,model_queue_room,[],group_queue_manager,1,1,1,1
+queue_service_rule_user,Queue Service Rule User,model_queue_service,[],group_queue_user,1,0,0,0
+queue_service_rule_manager,Queue Service Rule Manager,model_queue_service,[],group_queue_manager,1,1,1,1

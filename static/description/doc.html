@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi" xml:lang="vi">
+
+<head>
+    <title>Hướng Dẫn Sử Dụng - Hệ Thống Quản Lý Hàng Đợi Khám Sức Khỏe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #4A6A8F;
+        }
+
+        .step {
+            margin-bottom: 30px;
+        }
+
+        .note {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 5px solid #4A6A8F;
+            margin: 15px 0;
+        }
+
+        .screenshot {
+            max-width: 100%;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+        }
+
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 5px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Hướng Dẫn Sử Dụng - Hệ Thống Quản Lý Hàng Đợi Khám Sức Khỏe</h1>
+
+    <div class="step">
+        <h2>1. Cài Đặt Module</h2>
+        <ul>
+            <li>Cài đặt module qua giao diện Ứng Dụng của Odoo</li>
+            <li>Sau khi cài đặt, menu "Quản Lý Hàng Đợi" sẽ xuất hiện</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>2. Cấu Hình Ban Đầu</h2>
+        <ul>
+            <li>Đi đến <code>Quản Lý Hàng Đợi > Cấu Hình</code> để thiết lập các thông số cần thiết</li>
+            <li>Thiết lập các dịch vụ y tế (Đăng ký, Xét nghiệm, Khám bệnh...)</li>
+            <li>Tạo các phòng phục vụ cho từng dịch vụ</li>
+            <li>Tạo các gói khám sức khỏe (Cơ bản, Tiêu chuẩn...)</li>
+            <li>Thiết lập tuyến đường dịch vụ (qui trình khám)</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>3. Quản Lý Bệnh Nhân</h2>
+        <ul>
+            <li>Đi đến <code>Quản Lý Hàng Đợi > Bệnh Nhân</code> để xem và quản lý bệnh nhân</li>
+            <li>Đánh dấu người liên hệ là "Bệnh Nhân" và điền thông tin cần thiết</li>
+            <li>Gán gói khám sức khỏe cho bệnh nhân</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>4. Tạo Token</h2>
+        <ul>
+            <li>Đi đến <code>Quản Lý Hàng Đợi > Token</code> để tạo token mới</li>
+            <li>Chọn bệnh nhân và dịch vụ cần khám</li>
+            <li>Hệ thống sẽ tự động tính toán mức ưu tiên, chỉ định phòng và sắp xếp token trong hàng đợi</li>
+            <li>Hoặc sử dụng chức năng "Tạo Token Hàng Loạt" để tạo token cho nhiều bệnh nhân cùng lúc</li>
+        </ul>
+
+        <div class="note">
+            <strong>Lưu ý:</strong> Token sẽ tự động được tạo cho dịch vụ tiếp theo khi hoàn thành dịch vụ hiện tại,
+            tuân theo quy trình khám đã thiết lập cho gói dịch vụ.
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>5. Theo Dõi Hàng Đợi</h2>
+        <ul>
+            <li>Sử dụng <code>Quản Lý Hàng Đợi > Bảng Điều Khiển</code> để theo dõi và quản lý hàng đợi theo thời gian
+                thực</li>
+            <li>Gọi bệnh nhân tiếp theo bằng nút "Bắt Đầu" trên token</li>
+            <li>Đánh dấu hoàn thành dịch vụ với nút "Hoàn Thành"</li>
+            <li>Theo dõi thời gian chờ và tải của các phòng</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>6. Hiển Thị Hàng Đợi Cho Bệnh Nhân</h2>
+        <ul>
+            <li>Đi đến <code>Quản Lý Hàng Đợi > Cấu Hình > Màn Hình Hiển Thị</code> để thiết lập màn hình hiển thị</li>
+            <li>Chọn các phòng cần hiển thị</li>
+            <li>Nhấn "Xem Màn Hình" từ Bảng Điều Khiển để mở màn hình hiển thị công khai</li>
+            <li>Đặt màn hình hiển thị ở khu vực chờ để bệnh nhân theo dõi số thứ tự</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>7. Báo Cáo Và Thống Kê</h2>
+        <ul>
+            <li>Sử dụng <code>Quản Lý Hàng Đợi > Báo Cáo</code> để tạo các báo cáo thống kê</li>
+            <li>Phân tích thời gian chờ, thời gian phục vụ theo phòng, dịch vụ, thời gian...</li>
+            <li>Xuất báo cáo dưới dạng PDF hoặc Excel</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>8. Cân Bằng Tải Tự Động</h2>
+        <p>Hệ thống tự động cân bằng tải giữa các phòng theo các nguyên tắc sau:</p>
+        <ul>
+            <li>Định kỳ kiểm tra tải của các phòng (mặc định: 10 phút)</li>
+            <li>Chuyển bệnh nhân từ phòng quá tải (thời gian chờ > 30 phút) sang phòng ít tải</li>
+            <li>Bệnh nhân ưu tiên luôn được chỉ định vào phòng có thời gian chờ ngắn nhất</li>
+            <li>Thông báo cho bệnh nhân khi phòng được chuyển đổi</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>9. Thông Báo Tự Động</h2>
+        <ul>
+            <li>Đi đến <code>Cài Đặt > Kỹ Thuật > Tham Số > Quản Lý Hàng Đợi</code> để kích hoạt thông báo tự động</li>
+            <li>Bật thông báo SMS và/hoặc Email</li>
+            <li>Chọn mẫu thông báo cho từng loại thông báo (Token mới, Đến lượt, Chuyển phòng)</li>
+        </ul>
+    </div>
+
+    <h2>Hỗ Trợ Và Câu Hỏi Thường Gặp</h2>
+    <p>Nếu bạn cần hỗ trợ hoặc có câu hỏi, vui lòng liên hệ:</p>
+    <p>Email: support@yourcompany.com</p>
+    <p>Website: https://www.yourcompany.com</p>
+</body>
+
+</html>

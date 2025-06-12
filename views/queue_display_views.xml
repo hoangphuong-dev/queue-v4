@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="public_display_template">
+        <html>
+            <head>
+                <title>Hệ Thống Hàng Đợi</title>
+                <meta http-equiv="refresh" t-att-content="str(display.refresh_interval)" />
+                <meta charset="utf-8" />
+                <meta name="viewport"
+                    content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                <link rel="stylesheet"
+                    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+                <link href="/hospital_queue_management/static/src/css/queue_display.css"
+                    rel="stylesheet" />
+            </head>
+            <body>
+                <div class="container-fluid">
+                    <div class="row bg-primary text-white p-3">
+                        <div class="col-9">
+                            <h1>
+                                <t t-esc="display.name" />
+                            </h1>
+                            <p>
+                                <t t-esc="display.location" />
+                            </p>
+                        </div>
+                        <div class="col-3 text-right">
+                            <div class="queue-clock" id="clock"></div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <t t-foreach="display_data" t-as="room_data">
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="queue-token-card">
+                                    <div class="queue-room-header">
+                                        <div>
+                                            <t t-esc="room_data['room_name']" />
+                                        </div>
+                                        <div class="queue-service-name">
+                                            <t t-esc="room_data['service_name']" />
+                                        </div>
+                                    </div>
+                                    <div class="p-3">
+                                        <h3 class="text-center mb-3">Đang phục vụ</h3>
+                                        <div class="queue-current-token">
+                                            <t t-if="room_data['current_token']">
+                                                <t t-esc="room_data['current_token']" />
+                                            </t>
+                                            <t t-else="">
+                                                -
+                                            </t>
+                                        </div>
+
+                                        <h4 class="mt-4 mb-3">Đang chờ</h4>
+                                        <div class="queue-waiting-list">
+                                            <t t-foreach="room_data['waiting_tokens']" t-as="token">
+                                                <div
+                                                    t-attf-class="queue-waiting-token #{token.get('emergency') and 'queue-emergency-token' or ''}">
+                                                    <span>
+                                                        <t t-esc="token['name']" />
+                                                    </span>
+                                                    <span class="queue-time-badge"
+                                                        t-if="display.show_estimated_time">
+                                                        <t t-esc="token['wait_time']" /> phút </span>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                <script
+                    src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+                <script>
+                    function updateClock() {
+                    const now = new Date();
+                    const time = now.toLocaleTimeString();
+                    const date = now.toLocaleDateString();
+                    document.getElementById('clock').innerHTML = date + ' ' + time;
+                    setTimeout(updateClock, 1000);
+                    }
+                    updateClock();
+                </script>
+            </body>
+        </html>
+    </template>
+</odoo>

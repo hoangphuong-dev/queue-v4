@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hospital_queue_management.FormViewButtons" t-inherit="web.FormView.Buttons"
+        t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_form_button_create')]" position="after">
+            <t t-if="props.resModel === 'queue.token'">
+                <button type="button" class="btn btn-secondary o_queue_print_token"
+                    name="o_queue_print_token">
+                    <i class="fa fa-print" /> In Token </button>
+                <button type="button" class="btn btn-danger o_queue_emergency_override"
+                    name="o_queue_emergency_override">
+                    <i class="fa fa-exclamation-triangle" /> Đánh Dấu Khẩn Cấp </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

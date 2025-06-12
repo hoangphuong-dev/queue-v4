@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_queue_room_selection_wizard_simple_form" model="ir.ui.view">
+        <field name="name">queue.room.selection.wizard.simple.form</field>
+        <field name="model">queue.room.selection.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Đổi phòng khám">
+                <sheet>
+                    <group>
+                        <field name="patient_id" readonly="1"/>
+                        <field name="service_id" readonly="1"/>
+                        <field name="current_room_id" readonly="1" invisible="not current_room_id"/>
+                    </group>
+                    
+                    <group string="Chọn phòng mới">
+                        <field name="selected_room_id" 
+                            domain="[('service_id', '=', service_id), ('state', '=', 'open')]"
+                            options="{'no_create': True}"
+                            required="1"/>
+                    </group>
+                </sheet>
+                
+                <footer>
+                    <button string="Hủy" class="btn-secondary" special="cancel"/>
+                    <button string="Xác nhận" name="action_coordinate" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

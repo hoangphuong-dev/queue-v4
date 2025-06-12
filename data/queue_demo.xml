@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Dịch Vụ Demo (giữ nguyên) -->
+        <record id="service_registration" model="queue.service">
+            <field name="name">Đăng Ký</field>
+            <field name="code">REG</field>
+            <field name="service_type">registration</field>
+            <field name="average_duration">5</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="service_vitals" model="queue.service">
+            <field name="name">Đo Dấu Hiệu Sinh Tồn</field>
+            <field name="code">VITAL</field>
+            <field name="service_type">vitals</field>
+            <field name="average_duration">7</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="service_blood_test" model="queue.service">
+            <field name="name">Xét Nghiệm Máu</field>
+            <field name="code">BLOOD</field>
+            <field name="service_type">lab</field>
+            <field name="average_duration">15</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="service_xray" model="queue.service">
+            <field name="name">X-Quang</field>
+            <field name="code">XRAY</field>
+            <field name="service_type">imaging</field>
+            <field name="average_duration">10</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="service_ultrasound" model="queue.service">
+            <field name="name">Siêu Âm</field>
+            <field name="code">ULTRA</field>
+            <field name="service_type">imaging</field>
+            <field name="average_duration">20</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="service_doctor" model="queue.service">
+            <field name="name">Khám Bác Sĩ</field>
+            <field name="code">DOC</field>
+            <field name="service_type">consultation</field>
+            <field name="average_duration">15</field>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="service_pharmacy" model="queue.service">
+            <field name="name">Nhận Thuốc</field>
+            <field name="code">PHARM</field>
+            <field name="service_type">other</field>
+            <field name="average_duration">8</field>
+            <field name="sequence">7</field>
+        </record>
+
+        <!-- Gói Dịch Vụ Demo (giữ nguyên) -->
+        <record id="package_basic" model="queue.package">
+            <field name="name">Gói Cơ Bản</field>
+            <field name="code">basic</field>
+            <field name="service_ids"
+                eval="[(6, 0, [
+                ref('service_registration'), 
+                ref('service_vitals'), 
+                ref('service_blood_test'), 
+                ref('service_xray'), 
+                ref('service_doctor'), 
+                ref('service_pharmacy')
+            ])]" />
+        </record>
+
+        <record id="package_standard" model="queue.package">
+            <field name="name">Gói Tiêu Chuẩn</field>
+            <field name="code">standard</field>
+            <field name="service_ids"
+                eval="[(6, 0, [
+                ref('service_registration'), 
+                ref('service_vitals'), 
+                ref('service_blood_test'), 
+                ref('service_xray'), 
+                ref('service_ultrasound'), 
+                ref('service_doctor'), 
+                ref('service_pharmacy')
+            ])]" />
+        </record>
+
+        <!-- Phòng Demo - Mỗi dịch vụ 4 phòng -->
+        
+        <!-- 4 Phòng Đăng Ký -->
+        <record id="room_registration_1" model="queue.room">
+            <field name="name">Phòng Đăng Ký 1</field>
+            <field name="code">REG01</field>
+            <field name="service_id" ref="service_registration" />
+            <field name="capacity">2</field>
+        </record>
+        
+        <record id="room_registration_2" model="queue.room">
+            <field name="name">Phòng Đăng Ký 2</field>
+            <field name="code">REG02</field>
+            <field name="service_id" ref="service_registration" />
+            <field name="capacity">2</field>
+        </record>
+        
+        <record id="room_registration_3" model="queue.room">
+            <field name="name">Phòng Đăng Ký 3</field>
+            <field name="code">REG03</field>
+            <field name="service_id" ref="service_registration" />
+            <field name="capacity">2</field>
+        </record>
+        
+        <record id="room_registration_4" model="queue.room">
+            <field name="name">Phòng Đăng Ký 4</field>
+            <field name="code">REG04</field>
+            <field name="service_id" ref="service_registration" />
+            <field name="capacity">2</field>
+        </record>
+
+        <!-- 4 Phòng Đo Sinh Hiệu -->
+        <record id="room_vitals_1" model="queue.room">
+            <field name="name">Phòng Đo Sinh Hiệu 1</field>
+            <field name="code">VIT01</field>
+            <field name="service_id" ref="service_vitals" />
+            <field name="capacity">3</field>
+        </record>
+        
+        <record id="room_vitals_2" model="queue.room">
+            <field name="name">Phòng Đo Sinh Hiệu 2</field>
+            <field name="code">VIT02</field>
+            <field name="service_id" ref="service_vitals" />
+            <field name="capacity">3</field>
+        </record>
+        
+        <record id="room_vitals_3" model="queue.room">
+            <field name="name">Phòng Đo Sinh Hiệu 3</field>
+            <field name="code">VIT03</field>
+            <field name="service_id" ref="service_vitals" />
+            <field name="capacity">3</field>
+        </record>
+        
+        <record id="room_vitals_4" model="queue.room">
+            <field name="name">Phòng Đo Sinh Hiệu 4</field>
+            <field name="code">VIT04</field>
+            <field name="service_id" ref="service_vitals" />
+            <field name="capacity">3</field>
+        </record>
+
+        <!-- 4 Phòng Xét Nghiệm -->
+        <record id="room_blood_test_1" model="queue.room">
+            <field name="name">Phòng Xét Nghiệm 1</field>
+            <field name="code">LAB01</field>
+            <field name="service_id" ref="service_blood_test" />
+            <field name="capacity">2</field>
+        </record>
+        
+        <record id="room_blood_test_2" model="queue.room">
+            <field name="name">Phòng Xét Nghiệm 2</field>
+            <field name="code">LAB02</field>
+            <field name="service_id" ref="service_blood_test" />
+            <field name="capacity">2</field>
+        </record>
+        
+        <record id="room_blood_test_3" model="queue.room">
+            <field name="name">Phòng Xét Nghiệm 3</field>
+            <field name="code">LAB03</field>
+            <field name="service_id" ref="service_blood_test" />
+            <field name="capacity">2</field>
+        </record>
+        
+        <record id="room_blood_test_4" model="queue.room">
+            <field name="name">Phòng Xét Nghiệm 4</field>
+            <field name="code">LAB04</field>
+            <field name="service_id" ref="service_blood_test" />
+            <field name="capacity">2</field>
+        </record>
+
+        <!-- 4 Phòng X-Quang -->
+        <record id="room_xray_1" model="queue.room">
+            <field name="name">Phòng X-Quang 1</field>
+            <field name="code">XRAY01</field>
+            <field name="service_id" ref="service_xray" />
+            <field name="capacity">1</field>
+        </record>
+        
+        <record id="room_xray_2" model="queue.room">
+            <field name="name">Phòng X-Quang 2</field>
+            <field name="code">XRAY02</field>
+            <field name="service_id" ref="service_xray" />
+            <field name="capacity">1</field>
+        </record>
+        
+        <record id="room_xray_3" model="queue.room">
+            <field name="name">Phòng X-Quang 3</field>
+            <field name="code">XRAY03</field>
+            <field name="service_id" ref="service_xray" />
+            <field name="capacity">1</field>
+        </record>
+        
+        <record id="room_xray_4" model="queue.room">
+            <field name="name">Phòng X-Quang 4</field>
+            <field name="code">XRAY04</field>
+            <field name="service_id" ref="service_xray" />
+            <field name="capacity">1</field>
+        </record>
+
+        <!-- 4 Phòng Siêu Âm -->
+        <record id="room_ultrasound_1" model="queue.room">
+            <field name="name">Phòng Siêu Âm 1</field>
+            <field name="code">UTR01</field>
+            <field name="service_id" ref="service_ultrasound" />
+            <field name="capacity">1</field>
+        </record>
+        
+        <record id="room_ultrasound_2" model="queue.room">
+            <field name="name">Phòng Siêu Âm 2</field>
+            <field name="code">UTR02</field>
+            <field name="service_id" ref="service_ultrasound" />
+            <field name="capacity">1</field>
+        </record>
+        
+        <record id="room_ultrasound_3" model="queue.room">
+            <field name="name">Phòng Siêu Âm 3</field>
+            <field name="code">UTR03</field>
+            <field name="service_id" ref="service_ultrasound" />
+            <field name="capacity">1</field>
+        </record>
+        
+        <record id="room_ultrasound_4" model="queue.room">
+            <field name="name">Phòng Siêu Âm 4</field>
+            <field name="code">UTR04</field>
+            <field name="service_id" ref="service_ultrasound" />
+            <field name="capacity">1</field>
+        </record>
+
+        <!-- 4 Phòng Khám Bác Sĩ -->
+        <record id="room_doctor_1" model="queue.room">
+            <field name="name">Phòng Khám 1</field>
+            <field name="code">DOC01</field>
+            <field name="service_id" ref="service_doctor" />
+            <field name="capacity">1</field>
+        </record>
+        
+        <record id="room_doctor_2" model="queue.room">
+            <field name="name">Phòng Khám 2</field>
+            <field name="code">DOC02</field>
+            <field name="service_id" ref="service_doctor" />
+            <field name="capacity">1</field>
+        </record>
+        
+        <record id="room_doctor_3" model="queue.room">
+            <field name="name">Phòng Khám 3</field>
+            <field name="code">DOC03</field>
+            <field name="service_id" ref="service_doctor" />
+            <field name="capacity">1</field>
+        </record>
+        
+        <record id="room_doctor_4" model="queue.room">
+            <field name="name">Phòng Khám 4</field>
+            <field name="code">DOC04</field>
+            <field name="service_id" ref="service_doctor" />
+            <field name="capacity">1</field>
+        </record>
+
+        <!-- 4 Quầy Thuốc -->
+        <record id="room_pharmacy_1" model="queue.room">
+            <field name="name">Quầy Thuốc 1</field>
+            <field name="code">PHARM01</field>
+            <field name="service_id" ref="service_pharmacy" />
+            <field name="capacity">2</field>
+        </record>
+        
+        <record id="room_pharmacy_2" model="queue.room">
+            <field name="name">Quầy Thuốc 2</field>
+            <field name="code">PHARM02</field>
+            <field name="service_id" ref="service_pharmacy" />
+            <field name="capacity">2</field>
+        </record>
+        
+        <record id="room_pharmacy_3" model="queue.room">
+            <field name="name">Quầy Thuốc 3</field>
+            <field name="code">PHARM03</field>
+            <field name="service_id" ref="service_pharmacy" />
+            <field name="capacity">2</field>
+        </record>
+        
+        <record id="room_pharmacy_4" model="queue.room">
+            <field name="name">Quầy Thuốc 4</field>
+            <field name="code">PHARM04</field>
+            <field name="service_id" ref="service_pharmacy" />
+            <field name="capacity">2</field>
+        </record>
+
+        <!-- Tuyến Đường Dịch Vụ (giữ nguyên) -->
+        <record id="route_reg_to_vital" model="queue.service.route">
+            <field name="service_from_id" ref="service_registration" />
+            <field name="service_to_id" ref="service_vitals" />
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="route_vital_to_blood" model="queue.service.route">
+            <field name="service_from_id" ref="service_vitals" />
+            <field name="service_to_id" ref="service_blood_test" />
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="route_blood_to_xray" model="queue.service.route">
+            <field name="service_from_id" ref="service_blood_test" />
+            <field name="service_to_id" ref="service_xray" />
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="route_xray_to_ultra" model="queue.service.route">
+            <field name="service_from_id" ref="service_xray" />
+            <field name="service_to_id" ref="service_ultrasound" />
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="route_ultra_to_doctor" model="queue.service.route">
+            <field name="service_from_id" ref="service_ultrasound" />
+            <field name="service_to_id" ref="service_doctor" />
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="route_xray_to_doctor" model="queue.service.route">
+            <field name="service_from_id" ref="service_xray" />
+            <field name="service_to_id" ref="service_doctor" />
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="route_doctor_to_pharmacy" model="queue.service.route">
+            <field name="service_from_id" ref="service_doctor" />
+            <field name="service_to_id" ref="service_pharmacy" />
+            <field name="sequence">10</field>
+        </record>
+
+    </data>
+</odoo>

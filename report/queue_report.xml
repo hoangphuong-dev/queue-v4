@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Báo Cáo Token -->
+    <record id="action_report_queue_token" model="ir.actions.report">
+        <field name="name">Phiếu Số Thứ Tự</field>
+        <field name="model">queue.token</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hospital_queue_management.report_queue_token</field>
+        <field name="report_file">hospital_queue_management.report_queue_token</field>
+        <field name="print_report_name">'Phiếu số thứ tự - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_queue_token" />
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Báo Cáo Thống Kê -->
+    <record id="action_report_queue_statistics" model="ir.actions.report">
+        <field name="name">Thống Kê Hàng Đợi</field>
+        <field name="model">queue.room</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hospital_queue_management.report_queue_statistics</field>
+        <field name="report_file">hospital_queue_management.report_queue_statistics</field>
+        <field name="print_report_name">'Thống kê hàng đợi - %s' % (object.name)</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Report Parser -->
+    <record id="ir_statistics_report" model="ir.actions.server">
+        <field name="name">Tạo Báo Cáo Thống Kê</field>
+        <field name="model_id" ref="model_queue_room" />
+        <field name="binding_model_id" ref="model_queue_room" />
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = {
+            'type': 'ir.actions.report',
+            'report_name': 'hospital_queue_management.report_queue_statistics',
+            'report_type': 'qweb-pdf',
+            'context': env.context,
+            }
+        </field>
+    </record>
+</odoo>

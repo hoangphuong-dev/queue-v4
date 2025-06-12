@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_queue_route_wizard_form" model="ir.ui.view">
+        <field name="name">queue.route.wizard.form</field>
+        <field name="model">queue.route.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tùy chỉnh Tuyến Đường">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="group_from_id" options="{'no_create': True}" />
+                            <field name="group_to_id" options="{'no_create': True}" />
+                            <field name="sequence" />
+                        </group>
+                        <group>
+                            <field name="package_id" options="{'no_create': True}" />
+                            <field name="condition" widget="ace" options="{'mode': 'python'}" />
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Ghi chú về tuyến đường này..." />
+                </sheet>
+                <footer>
+                    <button name="action_create_route" type="object" string="Tạo Tuyến Đường"
+                        class="btn-primary" />
+                    <button string="Hủy" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

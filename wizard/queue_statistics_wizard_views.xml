@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_queue_statistics_wizard_form" model="ir.ui.view">
+        <field name="name">queue.statistics.wizard.form</field>
+        <field name="model">queue.statistics.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tạo Báo Cáo Thống Kê">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date_from" />
+                            <field name="date_to" />
+                            <field name="report_type" />
+                        </group>
+                        <group>
+                            <field name="group_by" />
+                            <field name="service_ids" widget="many2many_tags" />
+                            <field name="room_ids" widget="many2many_tags" />
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_generate_report" string="Tạo Báo Cáo" type="object"
+                        class="btn-primary" />
+                    <button string="Hủy" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_queue_statistics_wizard" model="ir.actions.act_window">
+        <field name="name">Tạo Báo Cáo Thống Kê</field>
+        <field name="res_model">queue.statistics.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

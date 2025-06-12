@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="module_category_queue" model="ir.module.category">
+        <field name="name">Quản Lý Hàng Đợi</field>
+        <field name="description">Quản lý hàng đợi bệnh nhân</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="group_queue_user" model="res.groups">
+        <field name="name">Người Dùng</field>
+        <field name="category_id" ref="module_category_queue" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+    <record id="group_queue_manager" model="res.groups">
+        <field name="name">Quản Lý</field>
+        <field name="category_id" ref="module_category_queue" />
+        <field name="implied_ids" eval="[(4, ref('group_queue_user'))]" />
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+    </record>
+</odoo>

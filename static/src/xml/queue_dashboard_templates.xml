@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hospital_queue_management.QueueDashboard">
+        <div class="o_queue_dashboard d-flex flex-column h-100">
+            <div class="o_queue_dashboard_header bg-primary text-white p-3">
+                <div class="d-flex justify-content-between">
+                    <h1>Bảng Điều Khiển Hàng Đợi</h1>
+                    <div>
+                        <button class="btn btn-light refresh-dashboard" t-on-click="onRefreshClick">
+                            <i class="fa fa-refresh"/> Làm Mới
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="o_queue_dashboard_content flex-grow-1 p-3">
+                <t t-if="state.isLoading">
+                    <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+                        <div class="text-center">
+                            <i class="fa fa-spinner fa-spin fa-3x mb-3"></i>
+                            <p>Đang tải dữ liệu...</p>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <!-- Thống kê tổng quan -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header bg-info text-white">
+                                    <h3 class="card-title">Tổng Quan</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-2 text-center">
+                                            <h4 class="text-primary"><t t-esc="state.dashboardData.statistics?.total || 0"/></h4>
+                                            <p>Tổng số token</p>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <h4 class="text-warning"><t t-esc="state.dashboardData.statistics?.waiting || 0"/></h4>
+                                            <p>Đang chờ</p>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <h4 class="text-info"><t t-esc="state.dashboardData.statistics?.in_progress || 0"/></h4>
+                                            <p>Đang phục vụ</p>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <h4 class="text-success"><t t-esc="state.dashboardData.statistics?.completed || 0"/></h4>
+                                            <p>Đã hoàn thành</p>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <h4 class="text-danger"><t t-esc="state.dashboardData.statistics?.emergency || 0"/></h4>
+                                            <p>Khẩn cấp</p>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <h4 class="text-muted">
+                                                <t t-esc="formatTime(state.dashboardData.timestamp || '')"/>
+                                            </h4>
+                                            <p>Cập nhật lúc</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Danh sách phòng -->
+                    <div class="row">
+                        <t t-foreach="state.dashboardData.rooms || []" t-as="room" t-key="room.id">
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card h-100">
+                                    <div t-attf-class="card-header d-flex justify-content-between align-items-center
+                                        {{room.state === 'open' ? 'bg-success' : ''}}
+                                        {{room.state === 'closed' ? 'bg-danger' : ''}}
+                                        {{room.state === 'maintenance' ? 'bg-warning' : ''}} text-white">
+                                        <h4 class="card-title m-0"><t t-esc="room.name"/></h4>
+                                        <div>
+                                            <t t-if="room.state === 'open'">
+                                                <button class="btn btn-sm btn-outline-light room-action-button" 
+                                                        t-att-data-room-id="room.id" 
+                                                        data-action="action_close_room"
+                                                        t-on-click="onRoomActionClick">
+                                                    <i class="fa fa-power-off"/> Đóng
+                                                </button>
+                                            </t>
+                                            <t t-if="room.state === 'closed'">
+                                                <button class="btn btn-sm btn-outline-light room-action-button" 
+                                                        t-att-data-room-id="room.id" 
+                                                        data-action="action_open_room"
+                                                        t-on-click="onRoomActionClick">
+                                                    <i class="fa fa-play"/> Mở
+                                                </button>
+                                            </t>
+                                            <t t-if="room.state === 'maintenance'">
+                                                <button class="btn btn-sm btn-outline-light room-action-button" 
+                                                        t-att-data-room-id="room.id" 
+                                                        data-action="action_open_room"
+                                                        t-on-click="onRoomActionClick">
+                                                    <i class="fa fa-wrench"/> Hoàn Thành
+                                                </button>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="text-muted"><t t-esc="room.service"/></p>
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <h5>Số người chờ: <span class="badge badge-primary"><t t-esc="room.queue_length"/></span></h5>
+                                            </div>
+                                            <div class="col-6">
+                                                <h5>Thời gian chờ: 
+                                                    <span t-attf-class="badge {{room.estimated_wait_time > 30 ? 'badge-danger' : 'badge-success'}}">
+                                                        <t t-esc="room.estimated_wait_time"/> phút
+                                                    </span>
+                                                </h5>
+                                            </div>
+                                        </div>
+
+                                        <!-- Token đang phục vụ -->
+                                        <div class="current-token-section mb-3">
+                                            <h5>Đang phục vụ:</h5>
+                                            <t t-if="room.current_token">
+                                                <div class="alert alert-info d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <strong><t t-esc="room.current_token.name"/></strong>
+                                                        <div><t t-esc="room.current_token.patient"/></div>
+                                                        <small>
+                                                            Bắt đầu: <t t-esc="formatTime(room.current_token.start_time || '')"/>
+                                                        </small>
+                                                    </div>
+                                                    <button class="btn btn-sm btn-success token-action-button" 
+                                                            t-att-data-token-id="room.current_token.id" 
+                                                            data-action="action_complete_service"
+                                                            t-on-click="onTokenActionClick">
+                                                        <i class="fa fa-check"/> Hoàn Thành
+                                                    </button>
+                                                </div>
+                                            </t>
+                                            <t t-else="">
+                                                <div class="alert alert-light text-center">
+                                                    <i class="fa fa-user-o fa-2x mb-2"/>
+                                                    <p>Không có bệnh nhân đang phục vụ</p>
+                                                </div>
+                                            </t>
+                                        </div>
+
+                                        <!-- Danh sách chờ -->
+                                        <div class="waiting-tokens-section">
+                                            <h5>Đang chờ:</h5>
+                                            <t t-if="room.waiting_tokens and room.waiting_tokens.length > 0">
+                                                <div class="list-group">
+                                                    <t t-foreach="room.waiting_tokens" t-as="token" t-key="token.id">
+                                                        <div t-attf-class="list-group-item d-flex justify-content-between align-items-center
+                                                            {{token.emergency ? 'list-group-item-danger' : ''}}">
+                                                            <div>
+                                                                <span class="badge badge-primary mr-2"><t t-esc="token.position"/></span>
+                                                                <strong><t t-esc="token.name"/></strong> - <t t-esc="token.patient"/>
+                                                                <t t-if="token.emergency">
+                                                                    <span class="badge badge-danger ml-2">Khẩn cấp</span>
+                                                                </t>
+                                                            </div>
+                                                            <div>
+                                                                <span class="badge badge-info mr-2">
+                                                                    <t t-esc="token.wait_time"/> phút
+                                                                </span>
+                                                                <button class="btn btn-sm btn-primary token-action-button" 
+                                                                        t-att-data-token-id="token.id" 
+                                                                        data-action="action_start_service"
+                                                                        t-on-click="onTokenActionClick">
+                                                                    <i class="fa fa-play"/>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </t>
+                                            <t t-else="">
+                                                <div class="alert alert-light text-center">
+                                                    <p>Không có bệnh nhân đang chờ</p>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Thống kê theo dịch vụ -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header bg-info text-white">
+                                    <h3 class="card-title">Thống Kê Theo Dịch Vụ</h3>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Dịch vụ</th>
+                                                <th class="text-right">Tổng số</th>
+                                                <th class="text-right">Đang chờ</th>
+                                                <th class="text-right">Thời gian TB (phút)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="state.dashboardData.services || []" t-as="service" t-key="service.id">
+                                                <tr>
+                                                    <td><t t-esc="service.name"/></td>
+                                                    <td class="text-right"><t t-esc="service.total"/></td>
+                                                    <td class="text-right"><t t-esc="service.waiting"/></td>
+                                                    <td class="text-right"><t t-esc="service.avg_time.toFixed(1)"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

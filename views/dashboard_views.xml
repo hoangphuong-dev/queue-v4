@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Kanban View: Dashboard -->
+    <record id="view_queue_dashboard" model="ir.ui.view">
+        <field name="name">queue.room.dashboard.kanban</field>
+        <field name="model">queue.room</field>
+        <field name="arch" type="xml">
+            <kanban class="o_queue_dashboard" create="false">
+                <field name="name" />
+                <field name="service_id" />
+                <field name="state" />
+                <field name="queue_length" />
+                <field name="estimated_wait_time" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click room-card">
+                            <div t-attf-class="oe_kanban_card card p-0 h-100">
+                                <div
+                                    t-attf-class="card-header 
+                                     #{record.state.raw_value == 'open' ? 'bg-success' : ''}
+                                     #{record.state.raw_value == 'closed' ? 'bg-danger' : ''}
+                                     #{record.state.raw_value == 'maintenance' ? 'bg-warning' : ''} text-white">
+                                    <strong>
+                                        <field name="name" />
+                                    </strong>
+                                    <div>
+                                        <field name="service_id" />
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <span>Số lượng chờ:</span>
+                                            <span class="badge badge-info">
+                                                <field name="queue_length" />
+                                            </span>
+                                        </div>
+                                        <div class="col-6">
+                                            <span>Thời gian chờ:</span>
+                                            <span
+                                                t-attf-class="badge #{record.estimated_wait_time.raw_value > 30 ? 'badge-danger' : 'badge-success'}">
+                                                <field name="estimated_wait_time" /> phút </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center mt-3">
+                                        <button name="action_view_tokens" type="object"
+                                            class="btn btn-primary">
+                                            Xem Token
+                                        </button>
+
+                                        <button name="action_open_room" type="object"
+                                            class="btn btn-success"
+                                            invisible="context.get('state') == 'open'">
+                                            Mở Phòng
+                                        </button>
+
+                                        <button name="action_close_room" type="object"
+                                            class="btn btn-danger"
+                                            invisible="context.get('state') == 'closed'">
+                                            Đóng Phòng
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_queue_dashboard" model="ir.actions.act_window">
+        <field name="name">Bảng Điều Khiển</field>
+        <field name="res_model">queue.room</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="view_queue_dashboard" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Không có phòng nào!
+            </p>
+            <p>
+                Tạo phòng mới để bắt đầu quản lý hàng đợi.
+            </p>
+        </field>
+    </record>
+
+    <!-- Dashboard Menu -->
+    <menuitem id="menu_hospital_queue_dashboard" name="Bảng Điều Khiển"
+        parent="menu_hospital_queue_root" action="action_queue_dashboard" sequence="1" />
+</odoo>

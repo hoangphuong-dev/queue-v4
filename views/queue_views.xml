@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_queue_room_list" model="ir.ui.view">
+        <field name="name">queue.room.list</field>
+        <field name="model">queue.room</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="code" />
+                <field name="service_id" />
+                <field name="capacity" />
+                <field name="state" />
+                <field name="queue_length" />
+                <field name="estimated_wait_time" widget="float_time" />
+                <field name="active" />
+                
+                <button name="action_view_tokens" type="object"
+                    string="Xem Token" icon="fa-list-alt"
+                    class="btn-primary" />
+                    
+                <button name="action_open_room" type="object"
+                    string="Mở Phòng" icon="fa-unlock"
+                    invisible="state == 'open'"
+                    class="btn-success" />
+                    
+                <button name="action_close_room" type="object"
+                    string="Đóng Phòng" icon="fa-lock"
+                    invisible="state == 'closed'"
+                    class="btn-danger" />
+            </list>
+        </field>
+    </record>
+
+    <!-- views/queue_views.xml - Thêm button -->
+    <record id="view_queue_room_list_inherit_coordination" model="ir.ui.view">
+        <field name="name">queue.room.list.coordination</field>
+        <field name="model">queue.room</field>
+        <field name="inherit_id" ref="view_queue_room_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_tokens']" position="after">
+                <button name="action_view_tokens" type="object"
+                    string="Điều Phối" icon="fa-arrows"
+                    class="btn-warning"
+                    context="{'coordination_mode': True}"/>
+            </xpath>
+        </field>
+    </record>
+        
+    <!-- Form View: Token -->
+    <record id="view_queue_token_form" model="ir.ui.view">
+        <field name="name">queue.token.form</field>
+        <field name="model">queue.token</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start_service" type="object" string="Bắt Đầu"
+                        class="oe_highlight"
+                        invisible="state != 'waiting'" />
+                    <button name="action_complete_service" type="object" string="Hoàn Thành"
+                        class="oe_highlight"
+                        invisible="state != 'in_progress'" />
+                    <button name="action_cancel" type="object" string="Hủy"
+                        invisible="state in ['completed', 'cancelled', 'draft']" />
+                    <button name="action_emergency_override" type="object" string="Khẩn Cấp"
+                        class="btn-danger"
+                        invisible="emergency or state in ['completed', 'cancelled', 'draft']" />
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,waiting,in_progress,completed"
+                        invisible="state == 'draft'" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" 
+                                placeholder="Token sẽ được tạo tự động"/>
+                        </h1>
+                    </div>
+
+                    <!-- Form tạo mới đơn giản -->
+                    <group invisible="state != 'draft'">
+                        <div class="alert alert-info mb-3" role="alert">
+                            <i class="fa fa-info-circle me-2"></i>
+                            <strong>Hướng dẫn:</strong> Chỉ cần chọn bệnh nhân và dịch vụ. Hệ thống sẽ tự động tính toán thời gian chờ và phòng phù hợp.
+                        </div>
+                        <group string="Thông Tin Bệnh Nhân">
+                            <field name="patient_id" required="1"
+                                options="{'no_create': True, 'no_open': True}"
+                                domain="[('is_patient', '=', True)]" 
+                                placeholder="Tìm kiếm bệnh nhân..."/>
+                            <field name="service_id" required="1"
+                                placeholder="Chọn dịch vụ..."
+                                options="{'no_create': True}" />
+                        </group>
+                        <!-- <group string="Tùy Chọn">
+                            <field name="priority_id" 
+                                placeholder="Ưu tiên thường"/>
+                            <field name="emergency" />
+                            <field name="room_id"
+                                placeholder="Tự động chọn phòng"
+                                options="{'no_create': True}" />
+                        </group>
+                        <group string="Ghi Chú">
+                            <field name="notes" placeholder="Ghi chú thêm (tùy chọn)..." 
+                                nolabel="1"/>
+                        </group> -->
+                    </group>
+
+                    <!-- Form xem chi tiết token đã tạo -->
+                    <group invisible="state == 'draft'">
+                        <group string="Thông Tin Token">
+                            <field name="patient_id" readonly="1"/>
+                            <field name="service_id" readonly="1"/>
+                            <field name="room_id" readonly="1" />
+                            <field name="position" readonly="1" 
+                                string="Vị Trí Trong Hàng Đợi"/>
+                        </group>
+                        <group string="Trạng Thái &amp; Thời Gian">
+                            <field name="priority_id" readonly="1" />
+                            <field name="emergency" readonly="1" widget="boolean"/>
+                            <field name="estimated_wait_time" widget="float_time" readonly="1" 
+                                string="Thời Gian Chờ Dự Kiến"/>
+                            <field name="create_date" string="Thời Điểm Tạo" readonly="1" />
+                        </group>
+                    </group>
+
+                    <!-- Thời gian thực tế -->
+                    <group string="Thời Gian Thực Tế" 
+                           invisible="state in ['draft', 'waiting']">
+                        <group>
+                            <field name="start_time" readonly="1" />
+                            <field name="end_time" readonly="1" 
+                                invisible="state != 'completed'"/>
+                        </group>
+                        <group>
+                            <field name="actual_duration" widget="float_time" readonly="1" 
+                                invisible="state != 'completed'"
+                                string="Thời Gian Thực Hiện"/>
+                        </group>
+                    </group>
+
+                    <!-- Thông tin bổ sung -->
+                    <group string="Thông Tin Bổ Sung" 
+                           invisible="state == 'draft'">
+                        <field name="package_id" readonly="1" string="Gói Khám"/>
+                        <field name="next_service_id" readonly="1" string="Dịch Vụ Tiếp Theo"/>
+                        <field name="notes" placeholder="Ghi chú về token này..." 
+                            readonly="state != 'draft'"/>
+                    </group>
+                </sheet>
+                <!-- KHÔNG có chatter/mail tracking ở đây -->
+            </form>
+        </field>
+    </record>
+
+    <!-- List View: Token -->
+    <record id="view_queue_token_list" model="ir.ui.view">
+        <field name="name">queue.token.list</field>
+        <field name="model">queue.token</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="patient_id" />
+                <field name="service_id" />
+                <field name="room_id" />
+                <field name="position" />
+                <field name="priority_id" />
+                <field name="estimated_wait_time" widget="float_time" />
+                <field name="state" />
+                <field name="emergency" invisible="1" />
+                <field name="create_date" string="Thời Điểm Tạo" />
+                <button name="action_start_service" type="object"
+                    string="Bắt Đầu" icon="fa-play"
+                    invisible="state != 'waiting'" />
+                <button name="action_complete_service" type="object"
+                    string="Hoàn Thành" icon="fa-check"
+                    invisible="state != 'in_progress'" />
+                <button name="action_emergency_override" type="object"
+                    string="Khẩn Cấp" icon="fa-exclamation-triangle"
+                    invisible="emergency or state in ['completed', 'cancelled']" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View: Token -->
+    <record id="view_queue_token_search" model="ir.ui.view">
+        <field name="name">queue.token.search</field>
+        <field name="model">queue.token</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="patient_id" />
+                <field name="service_id" />
+                <field name="room_id" />
+                <field name="priority_id" />
+                <filter string="Đang Đợi" name="waiting" domain="[('state', '=', 'waiting')]" />
+                <filter string="Đang Thực Hiện" name="in_progress" domain="[('state', '=', 'in_progress')]" />
+                <filter string="Khẩn Cấp" name="emergency" domain="[('emergency', '=', True)]" />
+                <group expand="0" string="Nhóm Theo">
+                    <filter string="Dịch Vụ" name="group_service" domain="[]" context="{'group_by': 'service_id'}" />
+                    <filter string="Phòng" name="group_room" domain="[]" context="{'group_by': 'room_id'}" />
+                    <filter string="Trạng Thái" name="group_state" domain="[]" context="{'group_by': 'state'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Token Action -->
+    <record id="action_queue_token" model="ir.actions.act_window">
+        <field name="name">Token</field>
+        <field name="res_model">queue.token</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo token đầu tiên
+            </p>
+            <p>
+                Token được sử dụng để quản lý hàng đợi của bệnh nhân.
+            </p>
+        </field>
+    </record>
+
+    <!-- Kanban View: Token -->
+    <record id="view_queue_token_kanban" model="ir.ui.view">
+        <field name="name">queue.token.kanban</field>
+        <field name="model">queue.token</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="room_id" class="o_kanban_small_column"
+                records_draggable="0" group_create="0" group_delete="0" sample="1">
+                <field name="name" />
+                <field name="patient_id" />
+                <field name="service_id" />
+                <field name="room_id" />
+                <field name="position" />
+                <field name="priority" />
+                <field name="priority_id" />
+                <field name="estimated_wait_time" />
+                <field name="state" />
+                <field name="emergency" />
+                <field name="color" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div
+                            t-attf-class="oe_kanban_card oe_kanban_global_click
+                                           #{record.emergency.raw_value ? 'oe_kanban_color_alert' : ''}
+                                           oe_kanban_color_#{record.color.raw_value}">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name" />
+                                    <t t-if="record.emergency.raw_value">
+                                        <span class="badge badge-danger">Khẩn Cấp</span>
+                                    </t>
+                                </strong>
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="patient_id" />
+                                </div>
+                                <div class="oe_kanban_bottom_left">
+                                    <span class="oe_kanban_status" t-att-title="record.state.value">
+                                        <t t-if="record.state.raw_value == 'waiting'">
+                                            <span class="badge badge-info"> #<field name="position" />
+                                            </span>
+                                        </t>
+                                        <t t-if="record.state.raw_value == 'in_progress'">
+                                            <span class="badge badge-primary">Đang Phục Vụ</span>
+                                        </t>
+                                        <t t-if="record.state.raw_value == 'completed'">
+                                            <span class="badge badge-success">Hoàn Thành</span>
+                                        </t>
+                                        <t t-if="record.state.raw_value == 'cancelled'">
+                                            <span class="badge badge-danger">Đã Hủy</span>
+                                        </t>
+                                    </span>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <t t-if="record.state.raw_value == 'waiting'">
+                                        <span><field name="estimated_wait_time" /> phút</span>
+                                    </t>
+                                    <field name="priority_id" widget="many2one"
+                                        options="{'classes': {'Thông Thường': 'default', 'Người Cao Tuổi': 'info', 'Mang Thai/Khuyết Tật': 'primary', 'Tình Trạng Cấp Thiết': 'warning', 'VIP': 'success', 'Bác Sĩ Chỉ Định': 'primary', 'Khẩn Cấp': 'danger'}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- List View: Token -->
+    <record id="view_queue_token_list" model="ir.ui.view">
+        <field name="name">queue.token.list</field>
+        <field name="model">queue.token</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="emergency == True"
+                decoration-info="state == 'in_progress'" decoration-success="state == 'completed'">
+                <field name="name" />
+                <field name="patient_id" />
+                <field name="service_id" />
+                <field name="room_id" />
+                <field name="position" />
+                <field name="priority_id" />
+                <field name="estimated_wait_time" widget="float_time" />
+                <field name="state" />
+                <field name="emergency" invisible="1" />
+                <field name="create_date" string="Thời Điểm Tạo" />
+                <button name="action_start_service" type="object"
+                    string="Bắt Đầu" icon="fa-play"
+                    invisible="state != 'waiting'" />
+                <button name="action_complete_service" type="object"
+                    string="Hoàn Thành" icon="fa-check"
+                    invisible="state != 'in_progress'" />
+                <button name="action_emergency_override" type="object"
+                    string="Khẩn Cấp" icon="fa-exclamation-triangle"
+                    invisible="emergency or state in ['completed', 'cancelled']" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View: Token -->
+    <record id="view_queue_token_search" model="ir.ui.view">
+        <field name="name">queue.token.search</field>
+        <field name="model">queue.token</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="patient_id" />
+                <field name="service_id" />
+                <field name="room_id" />
+                <field name="priority_id" />
+                <filter string="Đang Đợi" name="waiting" domain="[('state', '=', 'waiting')]" />
+                <filter string="Đang Phục Vụ" name="in_progress"
+                    domain="[('state', '=', 'in_progress')]" />
+                <filter string="Hoàn Thành" name="completed" domain="[('state', '=', 'completed')]" />
+                <filter string="Đã Hủy" name="cancelled" domain="[('state', '=', 'cancelled')]" />
+                <filter string="Khẩn Cấp" name="emergency" domain="[('emergency', '=', True)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Phòng" name="room" context="{'group_by': 'room_id'}" />
+                    <filter string="Dịch Vụ" name="service" context="{'group_by': 'service_id'}" />
+                    <filter string="Trạng Thái" name="state" context="{'group_by': 'state'}" />
+                    <filter string="Mức Ưu Tiên" name="priority_id"
+                        context="{'group_by': 'priority_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action Definitions -->
+    <!-- Token Action -->
+    <record id="action_queue_token" model="ir.actions.act_window">
+        <field name="name">Token</field>
+        <field name="res_model">queue.token</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'search_default_waiting': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo token đầu tiên
+            </p>
+            <p>
+                Tạo token cho bệnh nhân đang chờ dịch vụ.
+            </p>
+        </field>
+    </record>
+
+    <!-- Room Action -->
+    <record id="action_queue_room" model="ir.actions.act_window">
+        <field name="name">Phòng</field>
+        <field name="res_model">queue.room</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo phòng đầu tiên
+            </p>
+            <p>
+                Tạo các phòng để bắt đầu quản lý hàng đợi.
+            </p>
+        </field>
+    </record>
+
+    <!-- Service Action -->
+    <record id="action_queue_service" model="ir.actions.act_window">
+        <field name="name">Dịch Vụ</field>
+        <field name="res_model">queue.service</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo dịch vụ đầu tiên
+            </p>
+            <p>
+                Tạo các dịch vụ mà bệnh nhân có thể đăng ký.
+            </p>
+        </field>
+    </record>
+
+    <!-- Package Action -->
+    <record id="action_queue_package" model="ir.actions.act_window">
+        <field name="name">Gói Dịch Vụ</field>
+        <field name="res_model">queue.package</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo gói dịch vụ đầu tiên
+            </p>
+            <p>
+                Tạo các gói dịch vụ được cung cấp cho bệnh nhân.
+            </p>
+        </field>
+    </record>
+
+    <!-- Priority Action -->
+    <record id="action_queue_priority" model="ir.actions.act_window">
+        <field name="name">Mức Ưu Tiên</field>
+        <field name="res_model">queue.priority</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo mức ưu tiên đầu tiên
+            </p>
+            <p>
+                Tạo các mức độ ưu tiên cho bệnh nhân.
+            </p>
+        </field>
+    </record>
+
+    <!-- Display Action -->
+    <record id="action_queue_display" model="ir.actions.act_window">
+        <field name="name">Màn Hình Hiển Thị</field>
+        <field name="res_model">queue.display</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo màn hình hiển thị đầu tiên
+            </p>
+            <p>
+                Cấu hình màn hình hiển thị cho phòng chờ.
+            </p>
+        </field>
+    </record>
+
+    <!-- Main Menu -->
+    <menuitem id="menu_hospital_queue_root" name="Quản Lý Hàng Đợi" sequence="10" />
+
+    <!-- Dashboard Menu -->
+    <menuitem id="menu_hospital_queue_dashboard" name="Bảng Điều Khiển"
+        parent="menu_hospital_queue_root" sequence="1" />
+
+    <!-- Token Menu -->
+    <menuitem id="menu_hospital_queue_token" name="Token" parent="menu_hospital_queue_root"
+        action="action_queue_token" sequence="10" />
+
+    <!-- Rooms Menu -->
+    <menuitem id="menu_hospital_queue_room" name="Phòng" parent="menu_hospital_queue_root"
+        action="action_queue_room" sequence="20" />
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_hospital_queue_config" name="Cấu Hình" parent="menu_hospital_queue_root"
+        sequence="99" />
+    <menuitem id="menu_hospital_queue_service" name="Dịch Vụ" parent="menu_hospital_queue_config"
+        action="action_queue_service" sequence="10" />
+    <menuitem id="menu_hospital_queue_package" name="Gói Dịch Vụ"
+        parent="menu_hospital_queue_config" action="action_queue_package" sequence="20" />
+    <menuitem id="menu_hospital_queue_priority" name="Mức Ưu Tiên"
+        parent="menu_hospital_queue_config" action="action_queue_priority" sequence="30" />
+    <menuitem id="menu_hospital_queue_display" name="Màn Hình Hiển Thị"
+        parent="menu_hospital_queue_config" action="action_queue_display" sequence="40" />
+</odoo>

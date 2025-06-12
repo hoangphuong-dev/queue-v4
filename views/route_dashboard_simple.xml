@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Iframe Dashboard -->
+    <record id="view_route_dashboard_iframe" model="ir.ui.view">
+        <field name="name">route.dashboard.iframe</field>
+        <field name="model">queue.service.group</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Sơ Đồ Tuyến Đường" create="false" edit="false">
+                <sheet>
+                    <div class="text-center mb-3">
+                        <h2>Sơ Đồ Tuyến Đường Dịch Vụ</h2>
+                    </div>
+                    
+                    <!-- Buttons -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <button name="%(action_queue_service_group_route)d" 
+                                    type="action" 
+                                    class="btn btn-primary w-100">
+                                <i class="fa fa-list"/> Quản Lý Tuyến Đường
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button name="action_refresh_dashboard" 
+                                    type="object" 
+                                    class="btn btn-info w-100">
+                                <i class="fa fa-refresh"/> Làm Mới
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button name="action_export_routes" 
+                                    type="object" 
+                                    class="btn btn-success w-100">
+                                <i class="fa fa-download"/> Xuất Dữ Liệu
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Iframe for visualization -->
+                    <div style="width: 100%; height: 600px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                        <iframe src="/queue/route_graph" 
+                                style="width: 100%; height: 100%; border: none;">
+                        </iframe>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

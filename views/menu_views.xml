@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Dashboard Menu -->
+    <menuitem id="menu_route_dashboard"
+              name="Sơ Đồ Tuyến Đường"
+              parent="menu_hospital_queue_config"
+              action="action_route_dashboard"
+              sequence="40"/>
+              
+    <menuitem id="menu_queue_service_group_route"
+              name="Tuyến Đường Nhóm Dịch Vụ"
+              parent="menu_hospital_queue_config"
+              action="action_queue_service_group_route"
+              sequence="45"/>
+</odoo>

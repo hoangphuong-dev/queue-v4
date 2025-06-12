@@ -1,0 +1,37 @@
+.o_queue_dashboard {
+    background-color: #f8f9fa;
+
+    .o_queue_dashboard_header {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .current-token-section {
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 1rem;
+    }
+
+    .room-card {
+        transition: all 0.3s;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    .card {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .token-action-button {
+        opacity: 0.8;
+        transition: all 0.2s;
+
+        &:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+    }
+}

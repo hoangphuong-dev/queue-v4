@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Mẫu SMS Token Mới -->
+        <record id="sms_template_new_token" model="sms.template">
+            <field name="name">Thông báo token mới</field>
+            <field name="model_id" ref="model_queue_token" />
+            <field name="body">Token ${object.name} đã được tạo. Phòng: ${object.room_id.name}, vị
+                trí: ${object.position}, thời gian chờ: ${int(object.estimated_wait_time)} phút.</field>
+        </record>
+
+        <!-- Mẫu SMS Đến Lượt -->
+        <record id="sms_template_token_called" model="sms.template">
+            <field name="name">Thông báo đến lượt</field>
+            <field name="model_id" ref="model_queue_token" />
+            <field name="body">ĐẾN LƯỢT CỦA BẠN! Token ${object.name} đang được gọi tại
+                ${object.room_id.name}. Vui lòng đến ngay.</field>
+        </record>
+
+        <!-- Mẫu SMS Chuyển Phòng -->
+        <record id="sms_template_room_change" model="sms.template">
+            <field name="name">Thông báo chuyển phòng</field>
+            <field name="model_id" ref="model_queue_token" />
+            <field name="body">Token ${object.name} đã được chuyển sang phòng
+                ${object.room_id.name}. Vị trí mới: ${object.position}. Thời gian chờ:
+                ${int(object.estimated_wait_time)} phút.</field>
+        </record>
+    </data>
+</odoo>

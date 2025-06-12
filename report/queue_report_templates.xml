@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Mẫu Báo Cáo Token Hàng Đợi -->
+    <template id="report_queue_token">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure" />
+                        <div class="text-center">
+                            <h2>PHIẾU SỐ THỨ TỰ</h2>
+                            <h1 class="mt32 mb32">
+                                <span t-field="doc.name" style="font-size: 48px; font-weight: bold;" />
+                            </h1>
+                        </div>
+                        <div class="row mt32 mb32">
+                            <div class="col-6">
+                                <strong>Bệnh Nhân:</strong>
+                                <br />
+                                <span t-field="doc.patient_id.name" />
+                                <t t-if="doc.patient_id.ref">
+                                    <br />
+                                    <span t-field="doc.patient_id.ref" />
+                                </t>
+                            </div>
+                            <div class="col-6">
+                                <strong>Dịch Vụ:</strong>
+                                <br />
+                                <span t-field="doc.service_id.name" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <strong>Phòng:</strong>
+                                <br />
+                                <span t-field="doc.room_id.name" />
+                            </div>
+                            <div class="col-6">
+                                <strong>Ưu Tiên:</strong>
+                                <br />
+                                <span t-field="doc.priority_id.name" />
+                            </div>
+                        </div>
+                        <div class="row mt32">
+                            <div class="col-6">
+                                <strong>Thời Gian Chờ Ước Tính:</strong><br />
+                                <span
+                                    t-field="doc.estimated_wait_time" /> phút </div>
+                            <div class="col-6">
+                                <strong>Vị Trí Trong Hàng:</strong>
+                                <br />
+                                <span t-field="doc.position" />
+                            </div>
+                        </div>
+                        <div class="mt32 text-center">
+                            <h3 t-if="doc.emergency">⚠️ KHẨN CẤP ⚠️</h3>
+                        </div>
+                        <div class="mt32 text-center">
+                            <small>Vui lòng giữ phiếu này và lắng nghe thông báo khi đến lượt</small>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Báo Cáo Thống Kê Hàng Đợi -->
+    <template id="report_queue_statistics">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Báo Cáo Thống Kê Hàng Đợi</h2>
+
+                    <!-- Thông tin tổng quan -->
+                    <div class="row mt32 mb32">
+                        <div class="col-4">
+                            <strong>Tổng số token:</strong>
+                            <span t-esc="total_tokens" />
+                        </div>
+                        <div class="col-4">
+                            <strong>Đang chờ:</strong>
+                            <span t-esc="waiting_tokens" />
+                        </div>
+                        <div class="col-4">
+                            <strong>Đã hoàn thành:</strong>
+                            <span t-esc="completed_tokens" />
+                        </div>
+                    </div>
+
+                    <!-- Thống kê theo dịch vụ -->
+                    <h3>Thống kê theo dịch vụ</h3>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Dịch vụ</th>
+                                <th class="text-right">Số lượt</th>
+                                <th class="text-right">Thời gian trung bình (phút)</th>
+                                <th class="text-right">Tỷ lệ hoàn thành (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="service_stats" t-as="stat">
+                                <tr>
+                                    <td>
+                                        <span t-esc="stat['name']" />
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="stat['count']" />
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.2f' % stat['avg_time']" />
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.2f' % stat['completion_rate']" />
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <!-- Biểu đồ thời gian chờ theo giờ -->
+                    <h3>Thời gian chờ trung bình theo giờ</h3>
+                    <div class="o_graph" t-att-data-data="wait_time_by_hour" />
+
+                    <!-- Thống kê theo phòng -->
+                    <h3>Thống kê theo phòng</h3>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Phòng</th>
+                                <th class="text-right">Số lượt</th>
+                                <th class="text-right">Đang chờ</th>
+                                <th class="text-right">Thời gian chờ ước tính (phút)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="room_stats" t-as="stat">
+                                <tr>
+                                    <td>
+                                        <span t-esc="stat['name']" />
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="stat['count']" />
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="stat['waiting']" />
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.2f' % stat['wait_time']" />
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

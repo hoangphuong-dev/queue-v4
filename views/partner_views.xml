@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_patient_detail_form" model="ir.ui.view">
+        <field name="name">res.partner.patient.detail.form</field>
+        <field name="model">res.partner</field>
+        <field name="priority">15</field>
+        <field name="arch" type="xml">
+            <form string="Chi tiết bệnh nhân" create="false" edit="false">
+                <div class="patient-detail-container">
+                    <!-- Header với nút Back -->
+                    <div class="d-flex align-items-center mb-4 px-3">
+                        <button string="" type="object" name="action_back"
+                                class="btn btn-link p-0 me-3 text-decoration-none">
+                            <i class="fa fa-arrow-left fa-lg"/>
+                        </button>
+                        <h2 class="mb-0 fw-bold" style="color: #00a09d;">Chi tiết bệnh nhân</h2>
+                    </div>
+
+                    <!-- Main content với 2 cột -->
+                    <div class="row mx-0">
+                        <!-- Cột trái: Điều phối dịch vụ (9/12) -->
+                        <div class="col-md-9 ps-3 pe-2">
+                            <!-- Dịch vụ tiếp theo -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="mb-0 fw-bold" style="color: #333;">Dịch vụ tiếp theo</h5>
+                                    <a href="#" onclick="alert('Xem lịch sử điều phối'); return false;" 
+                                    style="color: #17a2b8; text-decoration: none; font-size: 14px; font-weight: 500;">
+                                        Xem lịch sử điều phối
+                                    </a>
+                                </div>
+                                
+                                <field name="current_waiting_token_id" invisible="1"/>
+                                <!-- Card hiển thị khi có dịch vụ -->
+                                <div invisible="not current_waiting_token_id" class="card shadow-sm">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <h6 class="mb-1 fw-bold"><field name="next_service_name" readonly="1"/></h6>
+                                                <span class="badge bg-info">
+                                                    Phòng <field name="next_service_room" readonly="1" nolabel="1" class="d-inline"/>
+                                                </span>
+                                            </div>
+                                            <button type="object" 
+                                              class="btn btn-secondary btn-sm me-1"
+                                                style="border-radius: 20px;"
+                                                icon="fa-cog"
+                                                name="action_open_current_service_room_selection">
+                                                Đổi phòng
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="row text-center mt-3">
+                                            <div class="col-4">
+                                                <small class="text-muted d-block">Vị trí</small>
+                                                <strong>#<field name="next_service_position" readonly="1" nolabel="1"/></strong>
+                                            </div>
+                                            <div class="col-4">
+                                                <small class="text-muted d-block">Người chờ</small>
+                                                <strong><field name="next_service_queue_count" readonly="1" nolabel="1"/></strong>
+                                            </div>
+                                            <div class="col-4">
+                                                <small class="text-muted d-block">Dự kiến</small>
+                                                <strong><field name="next_service_wait_time" readonly="1" nolabel="1"/> phút</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hiển thị khi không có dịch vụ -->
+                                <div invisible="current_waiting_token_id" class="text-center p-5" 
+                                    style="background: #f8f9fa; border-radius: 12px;">
+                                    <i class="fa fa-calendar-check-o fa-4x mb-3" style="color: #dee2e6;"></i>
+                                    <h6 class="text-muted">Không có dịch vụ đang chờ</h6>
+                                    <p class="text-muted small mb-0">Bệnh nhân chưa đăng ký dịch vụ nào hoặc đã hoàn thành tất cả.</p>
+                                </div>
+                            </div>
+
+                            <!-- Dịch vụ ưu tiên tiếp theo -->
+                            <div>
+                                <h5 class="mb-3 fw-bold">Dịch vụ ưu tiên tiếp theo</h5>
+                                
+                                <!-- Filter buttons -->
+                                <div class="d-flex gap-2 mb-3">
+                                    <button class="btn btn-sm active" 
+                                            style="background: #00a09d; color: white; border-radius: 20px; padding: 6px 16px;">
+                                        <i class="fa fa-list me-1"></i> Theo dịch vụ
+                                    </button>
+                                    <button class="btn btn-sm" 
+                                            style="background: #f8f9fa; color: #6c757d; border: 1px solid #dee2e6; border-radius: 20px; padding: 6px 16px;">
+                                        <i class="fa fa-building me-1"></i> Theo phòng
+                                    </button>
+                                    <button class="btn btn-sm" 
+                                            style="background: #f8f9fa; color: #6c757d; border: 1px solid #dee2e6; border-radius: 20px; padding: 6px 16px;">
+                                        <i class="fa fa-sort me-1"></i> Theo vị trí
+                                    </button>
+                                </div>
+
+                                <field name="available_coordination_service_ids" 
+                                    mode="list" 
+                                    readonly="1" 
+                                    nolabel="1">
+                                    <list create="false" delete="false" edit="false" 
+                                        class="o_priority_services_list">
+                                        <field name="id" column_invisible="True"/>
+                                        <field name="name" string="Dịch vụ"/>
+                                        <field name="available_rooms_count" string="Phòng đang mở"/>
+                                        <field name="suggested_room_name" string="Phòng đề xuất"/>
+                                        <field name="waiting_queue_count" string="Số người chờ"/>
+                                        <field name="estimated_wait_time" string="Thời gian chờ (phút)" widget="float_time"/>
+
+                                        <button string="Điều phối"
+                                            type="action"
+                                            name="%(hospital_queue_management.action_server_coordinate_service)d"
+                                            class="btn btn-info btn-sm"
+                                            style="border-radius: 20px;"
+                                            icon=""
+                                            context="{'patient_id': parent.id, 'default_service_id': id}"
+                                            confirm="Xác nhận điều phối sang dịch vụ này? Token hiện tại sẽ bị hủy."/>
+                                    </list>
+                                </field>
+                                
+                            </div>
+                        </div>
+
+                        <!-- Cột phải: Thông tin cá nhân (3/12) -->
+                        <div class="col-md-3 ps-2 pe-3">
+                            <div class="patient-info-card p-4" style="background: #e8ecf1; border-radius: 12px;">
+                                <h5 class="mb-4 fw-bold">Thông tin cá nhân</h5>
+                                
+                                <!-- Avatar và tên -->
+                                <div class="text-center mb-4">
+                                    <field name="image_1920" widget="image" class="oe_avatar mb-3" 
+                                           options='{"preview_image": "image_128", "size": [90, 90]}'/>
+                                    <h6 class="mb-1 fw-bold"><field name="name" readonly="1"/></h6>
+                                    <div class="text-muted small">PID: <field name="patient_id_number" readonly="1"/></div>
+                                    <div class="btn btn-sm btn-success mt-2" 
+                                            style="border-radius: 20px;">
+                                        <i class="fa fa-comments me-1"></i> Thai phụ
+                                    </div>
+                                </div>
+
+                                <!-- Thông tin chi tiết -->
+                                <div class="patient-details">
+                                    <div class="mb-3">
+                                        <small class="text-muted small d-block mb-1">Ngày sinh</small>
+                                        <div class="fw-semibold"><field name="date_of_birth" readonly="1"/></div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <small class="text-muted small d-block mb-1">Tuổi</small>
+                                        <div class="fw-semibold"><field name="age" readonly="1"/></div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <small class="text-muted small d-block mb-1">Giới tính</small>
+                                        <div class="fw-semibold"><field name="gender" readonly="1"/></div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <small class="text-muted small d-block mb-1">Nghề nghiệp</small>
+                                        <div class="fw-semibold"><field name="function" readonly="1"/></div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <small class="text-muted small d-block mb-1">Địa chỉ</small>
+                                        <div class="fw-semibold">
+                                            <field name="street" readonly="1"/>
+                                            <field name="street2" readonly="1" invisible="not street2"/>
+                                            <field name="city" readonly="1"/>
+                                            <field name="state_id" readonly="1" options='{"no_open": True}'/>
+                                            <field name="country_id" readonly="1" options='{"no_open": True}'/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <small class="text-muted small d-block mb-1">Gói khám</small>
+                                        <div class="fw-semibold"><field name="queue_package_id" readonly="1"/></div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <small class="text-muted small d-block mb-1">Đoàn khám</small>
+                                        <div class="fw-semibold">Ngân hàng thương mại Cổ phần NCB</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <small class="text-muted small d-block mb-1">Số hợp đồng</small>
+                                        <div class="fw-semibold">2025-KSK-NCB</div>
+                                    </div>
+                                </div>
+
+                                <!-- QR Code -->
+                                <div class="text-center mt-4 pt-3 border-top">
+                                    <div class="text-muted small mb-2">Mã QR cá nhân</div>
+                                    <field name="patient_id_number" widget="qr_code" 
+                                           options="{'width': 120, 'height': 120}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Form View kế thừa từ base -->
+    <record id="view_partner_form_inherit_queue" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.queue</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='contact_addresses']" position="after">
+                <page string="Thông Tin Khám Bệnh" invisible="not is_patient">
+                    <group>
+                        <group>
+                            <field name="is_patient"/>
+                            <field name="date_of_birth"/>
+                            <field name="age"/>
+                            <field name="gender"/>
+                            <field name="patient_id_number"/>
+                        </group>
+                        <group>
+                            <field name="is_pregnant" invisible="gender != 'female'"/>
+                            <field name="is_disabled"/>
+                            <field name="has_urgent_condition"/>
+                            <field name="is_vip"/>
+                            <field name="doctor_assigned_priority"/>
+                            <field name="queue_package_id"/>
+                            <field name="patient_category"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lịch Sử Khám">
+                            <field name="queue_history_ids" readonly="1"/>
+                        </page>
+                    </notebook>
+                </page>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(action_queue_token)d" type="action" class="oe_stat_button"
+                        icon="fa-list-ol" context="{'search_default_patient_id': id}"
+                        invisible="not is_patient">
+                    <field name="queue_history_count" string="Token" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Kanban View cho danh sách bệnh nhân -->
+    <record id="view_partner_patient_kanban" model="ir.ui.view">
+        <field name="name">res.partner.patient.kanban</field>
+        <field name="model">res.partner</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <kanban string="Danh sách bệnh nhân">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="patient_category"/>
+                <field name="patient_id_number"/>
+                <field name="date_of_birth"/>
+                <field name="exam_count"/>
+                <field name="imaging_count"/>
+                <field name="specialty_count"/>
+                <field name="estimated_time"/>
+                <field name="is_patient"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <div class="o_kanban_record_subtitle">
+                                            <field name="patient_category"/>
+                                            | PID:
+                                            <field name="patient_id_number"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <strong>Sinh tôn:</strong>
+                                            <field name="date_of_birth"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <strong>Thời gian đợi:</strong>
+                                            <field name="estimated_time"/>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-4">
+                                            <small>
+                                                <strong>XN:</strong>
+                                                <field name="exam_count"/>
+                                            </small>
+                                        </div>
+                                        <div class="col-4">
+                                            <small>
+                                                <strong>CĐHA:</strong>
+                                                <field name="imaging_count"/>
+                                            </small>
+                                        </div>
+                                        <div class="col-4">
+                                            <small>
+                                                <strong>CK:</strong>
+                                                <field name="specialty_count"/>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- List View tùy chỉnh cho danh sách bệnh nhân -->
+    <record id="view_partner_patient_list_custom" model="ir.ui.view">
+        <field name="name">res.partner.patient.list.custom</field>
+        <field name="model">res.partner</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <list string="Danh sách bệnh nhân">
+                <field name="patient_category" string="Đối tượng"/>
+                <field name="name" string="Khách hàng"/>
+                <field name="patient_id_number" string="PID"/>
+                <field name="date_of_birth" string="Sinh tôn"/>
+                <field name="exam_count" string="Xét nghiệm"/>
+                <field name="imaging_count" string="CĐHA"/>
+                <field name="specialty_count" string="Chuyên khoa"/>
+                <field name="estimated_time" string="Thời gian đợi"/>
+                <field name="is_patient" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View cho danh sách bệnh nhân -->
+    <record id="view_partner_patient_search" model="ir.ui.view">
+        <field name="name">res.partner.patient.search</field>
+        <field name="model">res.partner</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm bệnh nhân">
+                <field name="name" string="Tên bệnh nhân"/>
+                <field name="patient_id_number" string="PID"/>
+                <field name="patient_category" string="Đối tượng"/>
+
+                <filter string="VVIP" name="vvip" domain="[('patient_category', '=', 'vvip')]"/>
+                <filter string="VIP" name="vip" domain="[('patient_category', '=', 'vip')]"/>
+                <filter string="Thai phụ" name="pregnant" domain="[('patient_category', '=', 'pregnant')]"/>
+                <filter string="Trẻ em" name="child" domain="[('patient_category', '=', 'child')]"/>
+                <filter string="Người già" name="elderly" domain="[('patient_category', '=', 'elderly')]"/>
+                <filter string="NCCVCM" name="nccvcm" domain="[('patient_category', '=', 'nccvcm')]"/>
+
+                <group expand="0" string="Nhóm theo">
+                    <filter string="Đối tượng" name="group_by_category" context="{'group_by': 'patient_category'}"/>
+                    <filter string="Ngày sinh" name="group_by_dob" context="{'group_by': 'date_of_birth'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action chính cho Danh sách bệnh nhân -->
+    <record id="action_patient_list_main" model="ir.actions.act_window">
+        <field name="name">Danh sách bệnh nhân</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_patient', '=', True)]</field>
+        <field name="context">{'default_is_patient': True}</field>
+        <field name="search_view_id" ref="view_partner_patient_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo bệnh nhân đầu tiên
+            </p>
+            <p>
+                Thêm bệnh nhân vào hệ thống quản lý hàng đợi.
+            </p>
+        </field>
+    </record>
+
+    <!-- Định nghĩa views cụ thể cho action -->
+    <record id="action_patient_list_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_partner_patient_kanban"/>
+        <field name="act_window_id" ref="action_patient_list_main"/>
+    </record>
+
+    <record id="action_patient_list_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_partner_patient_list_custom"/>
+        <field name="act_window_id" ref="action_patient_list_main"/>
+    </record>
+
+    <record id="action_patient_list_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_partner_patient_detail_form"/>
+        <field name="act_window_id" ref="action_patient_list_main"/>
+    </record>
+
+    <!-- Menu chính -->
+    <menuitem id="menu_patient_list_main"
+              name="Danh sách bệnh nhân"
+              parent="menu_hospital_queue_root"
+              action="action_patient_list_main"
+              sequence="5"/>
+</odoo>

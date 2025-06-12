@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="QueueDisplay">
+        <div class="o_queue_display_container">
+            <div class="o_queue_display_content"/>
+        </div>
+    </t>
+    
+    <t t-name="QueueDisplayContent">
+        <div class="row">
+            <div class="col-12 bg-primary text-white text-center py-2">
+                <h1 t-esc="displayData.name || 'Quản Lý Hàng Đợi'"/>
+                <p t-esc="moment().format('DD/MM/YYYY HH:mm:ss')"/>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <t t-foreach="displayData.rooms" t-as="room">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h3 class="card-title" t-esc="room.room_name"/>
+                            <p class="card-subtitle" t-esc="room.service_name"/>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 mb-3 text-center">
+                                    <h2>Đang phục vụ</h2>
+                                    <div class="display-4 font-weight-bold" t-esc="room.current_token || '-'"/>
+                                </div>
+                            </div>
+                            <h4>Đang chờ</h4>
+                            <ul class="list-group">
+                                <t t-foreach="room.waiting_tokens" t-as="token">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span t-esc="token.name"/>
+                                        <t t-if="displayData.show_estimated_time">
+                                            <span class="badge badge-primary badge-pill" t-esc="token.wait_time + ' phút'"/>
+                                        </t>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

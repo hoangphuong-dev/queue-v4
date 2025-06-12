@@ -1,0 +1,96 @@
+.o_queue_display_container {
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.queue-token-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.queue-token-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.queue-token-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #007bff;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.queue-current-token {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #28a745;
+    text-align: center;
+    padding: 20px;
+    background-color: #f0f9f4;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.queue-waiting-token {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    margin: 5px 0;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    font-size: 1.2rem;
+}
+
+.queue-emergency-token {
+    background-color: #f8d7da;
+    border-left: 5px solid #dc3545;
+}
+
+.queue-time-badge {
+    background-color: #007bff;
+    color: white;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+}
+
+.queue-room-header {
+    background-color: #4a6a8f;
+    color: white;
+    padding: 15px;
+    border-radius: 10px 10px 0 0;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.queue-service-name {
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.queue-clock {
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 20px 0;
+}

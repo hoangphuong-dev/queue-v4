@@ -1,0 +1,385 @@
+.o_patient_detail_container {
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.patient-avatar-container {
+    position: relative;
+    display: inline-block;
+}
+
+.patient-info .row {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 8px 0;
+}
+
+.patient-info .row:last-child {
+    border-bottom: none;
+}
+
+.qr-container {
+    margin-top: 20px;
+}
+
+.card.border-start {
+    border-left-width: 4px !important;
+}
+
+.service-card {
+    transition: all 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.alert {
+    border: none;
+    border-radius: 8px;
+}
+
+.card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.text-primary {
+    color: #007bff !important;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+.text-info {
+    color: #17a2b8 !important;
+}
+
+/* CSS hiện tại giữ nguyên, thêm phần này */
+
+.btn-secondary.btn-sm {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.btn-secondary.btn-sm:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.btn-primary.btn-sm:disabled {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn:disabled {
+    cursor: not-allowed !important;
+}
+
+.alert-success {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 450px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Next Service Card Styles */
+.next-service-card {
+    border: 2px solid #17a2b8;
+    border-radius: 16px;
+    padding: 24px;
+    background: #ffffff;
+    position: relative;
+}
+
+.next-service-card .service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.next-service-card .room-info {
+    flex: 1;
+}
+
+.next-service-card .room-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.next-service-card .waiting-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.next-service-card .waiting-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+    font-size: 14px;
+}
+
+.next-service-card .waiting-count i {
+    color: #17a2b8;
+}
+
+.next-service-card .priority-badge {
+    background: #ffc107;
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.next-service-card .time-section {
+    text-align: right;
+}
+
+.next-service-card .time-label {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.next-service-card .time-value {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+}
+
+.next-service-card .service-section {
+    margin-bottom: 16px;
+}
+
+.next-service-card .service-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.next-service-card .service-badges {
+    display: flex;
+    gap: 8px;
+}
+
+.next-service-card .badge-custom {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: #17a2b8;
+    color: white;
+}
+
+.next-service-card .location-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+    padding-left: 2px;
+}
+
+.next-service-card .location-section i {
+    color: #17a2b8;
+    font-size: 16px;
+}
+
+.next-service-card .doctor-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.next-service-card .doctor-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.next-service-card .doctor-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #e9ecef;
+}
+
+.next-service-card .doctor-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.next-service-card .doctor-details {
+    font-size: 14px;
+}
+
+.next-service-card .doctor-label {
+    color: #999;
+    font-size: 12px;
+}
+
+.next-service-card .doctor-name {
+    color: #333;
+    font-weight: 500;
+}
+
+.next-service-card .btn-custom {
+    background: transparent;
+    color: #17a2b8;
+    border: 1.5px solid #17a2b8;
+    padding: 8px 24px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.next-service-card .btn-custom:hover {
+    background: #17a2b8;
+    color: white;
+}
+
+/* static/src/scss/room_selection.scss */
+.room-selection-wizard {
+    .room-card {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            border-color: #00a09d;
+            background-color: #f8f9fa;
+        }
+
+        &.selected {
+            border-color: #00a09d;
+            background-color: #e8f5f4;
+
+            .form-check-input {
+                background-color: #00a09d;
+                border-color: #00a09d;
+            }
+        }
+
+        .room-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .room-name {
+                font-weight: 600;
+                font-size: 16px;
+            }
+
+            .room-stats {
+                display: flex;
+                gap: 20px;
+
+                .stat-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                    i {
+                        color: #6c757d;
+                    }
+                }
+            }
+
+            .wait-time {
+                .badge {
+                    padding: 5px 12px;
+                    border-radius: 15px;
+                    font-weight: 500;
+
+                    &.bg-success {
+                        background-color: #28a745 !important;
+                    }
+
+                    &.bg-warning {
+                        background-color: #fd7e14 !important;
+                        color: white;
+                    }
+
+                    &.bg-danger {
+                        background-color: #dc3545 !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.room-selection-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.room-selection-card:hover {
+    border-color: #00a09d;
+    background-color: #f8f9fa;
+}
+
+.room-selection-card.selected {
+    border-color: #00a09d;
+    background-color: #e8f5f4;
+}
+
+.wait-time-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.wait-time-green {
+    background-color: #28a745;
+    color: white;
+}
+
+.wait-time-orange {
+    background-color: #fd7e14;
+    color: white;
+}
+
+.wait-time-red {
+    background-color: #dc3545;
+    color: white;
+}

@@ -1,0 +1,158 @@
+.o_patient_detail_container {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+
+    .card {
+        border: 1px solid #e3e6f0;
+        border-radius: 0.35rem;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        margin-bottom: 1rem;
+
+        &.border-start {
+            border-left-width: 4px !important;
+        }
+    }
+
+    .patient-info {
+        .row {
+            margin-bottom: 0.25rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .nav-pills {
+        .nav-link {
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            color: #6c757d;
+
+            &.active {
+                background-color: #4e73df;
+                color: white;
+            }
+
+            &:hover {
+                background-color: #f8f9fa;
+            }
+        }
+    }
+
+    .badge {
+        font-size: 0.75rem;
+
+        &.bg-success {
+            background-color: #1cc88a !important;
+        }
+
+        &.bg-warning {
+            background-color: #f6c23e !important;
+        }
+
+        &.bg-danger {
+            background-color: #e74a3b !important;
+        }
+
+        &.bg-primary {
+            background-color: #4e73df !important;
+        }
+    }
+
+    .btn {
+        &.btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.775rem;
+            border-radius: 0.2rem;
+        }
+
+        &.btn-outline-primary {
+            color: #4e73df;
+            border-color: #4e73df;
+
+            &:hover {
+                background-color: #4e73df;
+                border-color: #4e73df;
+                color: white;
+            }
+        }
+
+        &.btn-primary {
+            background-color: #4e73df;
+            border-color: #4e73df;
+
+            &:hover {
+                background-color: #2e59d9;
+                border-color: #2e59d9;
+            }
+        }
+    }
+
+    .text-primary {
+        color: #4e73df !important;
+    }
+
+    .text-info {
+        color: #36b9cc !important;
+    }
+
+    // QR Code styling
+    .qr-container {
+        .fa-qrcode {
+            color: #858796;
+        }
+    }
+
+    // Service cards hover effect
+    .service-card {
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.25rem 2rem 0 rgba(58, 59, 69, 0.2);
+        }
+    }
+
+    // Avatar styling
+    .patient-avatar {
+        border: 3px solid #fff;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+
+    // Tab content styling
+    .tab-content {
+        .tab-pane {
+            padding-top: 1rem;
+        }
+    }
+
+    // Mobile responsive
+    @media (max-width: 991.98px) {
+
+        .col-lg-8,
+        .col-lg-4 {
+            margin-bottom: 2rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .row.align-items-center {
+
+            .col-2,
+            .col-6 {
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
+}
+
+// Form view specific styling
+.o_form_view {
+    .o_patient_detail_container {
+        margin: -1.5rem;
+        padding: 1.5rem;
+    }
+}

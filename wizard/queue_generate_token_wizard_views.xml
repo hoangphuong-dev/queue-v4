@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_queue_generate_token_wizard_form" model="ir.ui.view">
+        <field name="name">queue.generate.token.wizard.form</field>
+        <field name="model">queue.generate.token.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tạo Token Hàng Loạt">
+                <sheet>
+                    <!-- Thông báo số lượng bệnh nhân -->
+                    <div class="alert alert-info mb-3" role="alert">
+                        <i class="fa fa-users me-2"></i>
+                        <strong>Thông báo:</strong> Bạn đang tạo token cho 
+                        <field name="patient_count" readonly="1" class="fw-bold text-primary"/> bệnh nhân
+                    </div>
+
+                    <group>
+                        <group string="Thông Tin Dịch Vụ">
+                            <field name="service_id" required="1"
+                                placeholder="Chọn dịch vụ cho tất cả bệnh nhân..."/>
+                            <field name="priority_id" 
+                                placeholder="Ưu tiên thường"/>
+                            <field name="emergency" 
+                                help="Đánh dấu tất cả token là khẩn cấp"/>
+                        </group>
+                        <group string="Phân Phòng">
+                            <field name="assign_room" 
+                                help="Tự động phân phòng hoặc chọn phòng cố định"/>
+                            <field name="room_id" 
+                                invisible="assign_room == True"
+                                required="assign_room == False"
+                                domain="[('service_ids', 'in', [service_id])]"
+                                placeholder="Chọn phòng cố định..."/>
+                        </group>
+                    </group>
+                    
+                    <field name="notes" placeholder="Ghi chú chung cho tất cả token..." 
+                        class="mb-3"/>
+                    
+                    <!-- Danh sách bệnh nhân ngắn gọn -->
+                    <separator string="Danh Sách Bệnh Nhân Được Chọn" />
+                    <field name="patient_ids" readonly="1">
+                        <tree create="false" delete="false">
+                            <field name="name" string="Họ Tên"/>
+                            <field name="phone" string="SĐT"/>
+                            <field name="age" string="Tuổi"/>
+                            <field name="queue_package_id" string="Gói Khám"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_generate_tokens" 
+                        string="Tạo Tất Cả Token" 
+                        type="object" 
+                        class="btn-primary" 
+                        help="Tạo token cho tất cả bệnh nhân đã chọn"/>
+                    <button string="Hủy Bỏ" 
+                        class="btn-secondary" 
+                        special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_queue_generate_token_wizard" model="ir.actions.act_window">
+        <field name="name">Tạo Token Hàng Loạt</field>
+        <field name="res_model">queue.generate.token.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Thêm nút vào tree view của bệnh nhân -->
+    <record id="view_partner_tree_with_token" model="ir.ui.view">
+        <field name="name">res.partner.tree.with.token</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="js_class">view_tree_with_token</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Server Action để gọi wizard từ danh sách bệnh nhân -->
+    <record id="action_generate_token_from_patients" model="ir.actions.server">
+        <field name="name">Tạo Token Hàng Loạt</field>
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="binding_model_id" ref="base.model_res_partner" />
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = {
+            'name': 'Tạo Token Hàng Loạt',
+            'type': 'ir.actions.act_window',
+            'res_model': 'queue.generate.token.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+            'default_patient_ids': active_ids,
+            },
+            }
+        </field>
+    </record>
+
+    <!-- Menu cho wizard -->
+    <menuitem id="menu_queue_generate_token" name="Tạo Token Hàng Loạt"
+        parent="menu_hospital_queue_root" action="action_queue_generate_token_wizard" sequence="15" />
+</odoo>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Token cho Phạm Minh Châu - VVIP -->
+        <!-- Đăng ký -->
+        <record id="token_pham_minh_chau_registration" model="queue.token">
+            <field name="patient_id" ref="patient_pham_minh_chau"/>
+            <field name="service_id" ref="service_registration"/>
+            <field name="state">waiting</field>
+            <field name="priority">4</field>
+            <field name="service_group_id" ref="service_group_registration"/>
+        </record>
+        
+        <!-- Token cho Hoàng Đức Minh - Thường -->
+        <!-- Đăng ký -->
+        <record id="token_hoang_duc_minh_registration" model="queue.token">
+            <field name="patient_id" ref="patient_hoang_duc_minh"/>
+            <field name="service_id" ref="service_registration"/>
+            <field name="state">waiting</field>
+            <field name="priority">1</field>
+            <field name="service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Token cho Võ Thành Long - Trẻ em -->
+        <!-- Đăng ký -->
+        <record id="token_vo_thanh_long_registration" model="queue.token">
+            <field name="patient_id" ref="patient_vo_thanh_long"/>
+            <field name="service_id" ref="service_registration"/>
+            <field name="state">waiting</field>
+            <field name="priority">3</field>
+            <field name="service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Token cho Đặng Thu Hương - Thai phụ -->
+        <!-- Đăng ký -->
+        <record id="token_dang_thu_huong_registration" model="queue.token">
+            <field name="patient_id" ref="patient_dang_thu_huong"/>
+            <field name="service_id" ref="service_registration"/>
+            <field name="state">waiting</field>
+            <field name="priority">5</field>
+            <field name="service_group_id" ref="service_group_registration"/>
+        </record>
+        
+        <!-- Token cho Lý Văn Thành - NCCVCM -->
+        <!-- Đăng ký -->
+        <record id="token_ly_van_thanh_registration" model="queue.token">
+            <field name="patient_id" ref="patient_ly_van_thanh"/>
+            <field name="service_id" ref="service_registration"/>
+            <field name="state">waiting</field>
+            <field name="priority">2</field>
+            <field name="service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Token cho Bùi Thị Lan - Người già -->
+        <!-- Đăng ký -->
+        <record id="token_bui_thi_lan_registration" model="queue.token">
+            <field name="patient_id" ref="patient_bui_thi_lan"/>
+            <field name="service_id" ref="service_registration"/>
+            <field name="state">waiting</field>
+            <field name="priority">4</field>
+            <field name="service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Token cho Trịnh Quang Huy - VIP -->
+        <!-- Đăng ký -->
+        <record id="token_trinh_quang_huy_registration" model="queue.token">
+            <field name="patient_id" ref="patient_trinh_quang_huy"/>
+            <field name="service_id" ref="service_registration"/>
+            <field name="state">waiting</field>
+            <field name="priority">3</field>
+            <field name="service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Token cho Mai Xuân Vinh - Thường -->
+        <!-- Đăng ký -->
+        <record id="token_mai_xuan_vinh_registration" model="queue.token">
+            <field name="patient_id" ref="patient_mai_xuan_vinh"/>
+            <field name="service_id" ref="service_registration"/>
+            <field name="state">waiting</field>
+            <field name="priority">1</field>
+            <field name="service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Token cho Phan Thị Kim Anh - Trẻ em -->
+        <!-- Đăng ký -->
+        <record id="token_phan_thi_kim_anh_registration" model="queue.token">
+            <field name="patient_id" ref="patient_phan_thi_kim_anh"/>
+            <field name="service_id" ref="service_registration"/>
+            <field name="state">waiting</field>
+            <field name="priority">3</field>
+            <field name="service_group_id" ref="service_group_registration"/>
+        </record>
+    </data>
+</odoo>

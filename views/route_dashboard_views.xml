@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Dashboard Form View -->
+    <record id="view_route_dashboard_form" model="ir.ui.view">
+        <field name="name">queue.service.group.route.dashboard</field>
+        <field name="model">queue.service.group</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form string="Sơ Đồ Tuyến Đường" create="false" edit="false">
+                <sheet>
+                    <div class="text-center mb-4">
+                        <h2>Sơ Đồ Tuyến Đường Dịch Vụ</h2>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <button name="%(action_queue_service_group_route)d" 
+                                    type="action" 
+                                    class="btn btn-primary w-100">
+                                <i class="fa fa-list"/> Quản Lý Tuyến Đường
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button name="%(action_queue_service_group)d" 
+                                    type="action" 
+                                    class="btn btn-info w-100">
+                                <i class="fa fa-cubes"/> Quản Lý Nhóm
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button name="action_view_route_report" 
+                                    type="object" 
+                                    class="btn btn-success w-100">
+                                <i class="fa fa-bar-chart"/> Báo Cáo
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Route Visualization -->
+                    <div class="o_route_visualization">
+                        <field name="route_visualization_html" 
+                               widget="html" 
+                               nolabel="1"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_route_dashboard" model="ir.actions.act_window">
+        <field name="name">Sơ Đồ Tuyến Đường</field>
+        <field name="res_model">queue.service.group</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_route_dashboard_form"/>
+        <field name="target">inline</field>
+        <field name="context">{'create': False}</field>
+    </record>
+</odoo>

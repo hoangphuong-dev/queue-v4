@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_queue_service_group_route_list" model="ir.ui.view">
+        <field name="name">queue.service.group.route.list</field>
+        <field name="model">queue.service.group.route</field>
+        <field name="arch" type="xml">
+            <list string="Tuyến Đường Nhóm Dịch Vụ" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="group_from_id"/>
+                <field name="group_to_id"/>
+                <field name="package_id" optional="show"/>
+                <field name="condition" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_queue_service_group_route_kanban" model="ir.ui.view">
+        <field name="name">queue.service.group.route.kanban</field>
+        <field name="model">queue.service.group.route</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="group_from_id" class="o_kanban_small_column">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="group_from_id"/>
+                <field name="group_to_id"/>
+                <field name="package_id"/>
+                <field name="condition"/>
+                <templates>
+                    <t t-name="kanban-card">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb-2">
+                                <strong class="o_kanban_record_title">
+                                    <i class="fa fa-arrow-right text-primary me-2"/>
+                                    <field name="group_to_id"/>
+                                </strong>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div t-if="record.package_id.raw_value">
+                                    <span class="badge rounded-pill text-bg-info">
+                                        <field name="package_id"/>
+                                    </span>
+                                </div>
+                                <div t-else="">
+                                    <span class="badge rounded-pill text-bg-secondary">
+                                        Tất cả gói
+                                    </span>
+                                </div>
+                                <div t-if="record.condition.raw_value" class="mt-2">
+                                    <small class="text-muted">
+                                        <i class="fa fa-code"/> Có điều kiện
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_queue_service_group_route_form" model="ir.ui.view">
+        <field name="name">queue.service.group.route.form</field>
+        <field name="model">queue.service.group.route</field>
+        <field name="arch" type="xml">
+            <form string="Tuyến Đường Nhóm Dịch Vụ">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="group_from_id" options="{'no_create': True}"/>
+                            <field name="group_to_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="package_id"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Điều Kiện" name="condition">
+                            <field name="condition" widget="ace" 
+                                   options="{'mode': 'python'}" 
+                                   placeholder="Ví dụ: patient.is_vip == True"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_queue_service_group_route_search" model="ir.ui.view">
+        <field name="name">queue.service.group.route.search</field>
+        <field name="model">queue.service.group.route</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="group_from_id"/>
+                <field name="group_to_id"/>
+                <field name="package_id"/>
+                <filter string="Có điều kiện" name="has_condition" 
+                        domain="[('condition', '!=', False)]"/>
+                <group expand="0" string="Nhóm theo">
+                    <filter string="Từ Nhóm" name="group_by_from" 
+                            context="{'group_by': 'group_from_id'}"/>
+                    <filter string="Đến Nhóm" name="group_by_to" 
+                            context="{'group_by': 'group_to_id'}"/>
+                    <filter string="Gói Dịch Vụ" name="group_by_package" 
+                            context="{'group_by': 'package_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Graph View -->
+    <record id="view_queue_service_group_route_graph" model="ir.ui.view">
+        <field name="name">queue.service.group.route.graph</field>
+        <field name="model">queue.service.group.route</field>
+        <field name="arch" type="xml">
+            <graph string="Phân Tích Tuyến Đường" type="bar">
+                <field name="group_from_id"/>
+                <field name="group_to_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Pivot View -->
+    <record id="view_queue_service_group_route_pivot" model="ir.ui.view">
+        <field name="name">queue.service.group.route.pivot</field>
+        <field name="model">queue.service.group.route</field>
+        <field name="arch" type="xml">
+            <pivot string="Thống Kê Tuyến Đường">
+                <field name="group_from_id" type="row"/>
+                <field name="group_to_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Action Window -->
+    <record id="action_queue_service_group_route" model="ir.actions.act_window">
+        <field name="name">Tuyến Đường Nhóm Dịch Vụ</field>
+        <field name="res_model">queue.service.group.route</field>
+        <field name="view_mode">kanban,list,form,graph,pivot</field>
+        <field name="context">{'search_default_group_by_from': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo tuyến đường đầu tiên
+            </p>
+            <p>
+                Định nghĩa luồng di chuyển giữa các nhóm dịch vụ
+            </p>
+        </field>
+    </record>
+</odoo>

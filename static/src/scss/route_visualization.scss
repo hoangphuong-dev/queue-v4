@@ -1,0 +1,19 @@
+.o_route_visualization {
+    .route-node {
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover circle {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+    }
+
+    path {
+        transition: stroke-width 0.3s ease;
+
+        &:hover {
+            stroke-width: 4;
+        }
+    }
+}

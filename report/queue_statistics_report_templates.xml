@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Template Báo Cáo Tổng Quan -->
+    <template id="report_queue_summary">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Báo Cáo Tổng Quan Hàng Đợi</h2>
+
+                    <!-- Thông tin tổng quan -->
+                    <div class="row mt32 mb32">
+                        <div class="col-3">
+                            <strong>Từ ngày:</strong>
+                            <span t-esc="data['date_from']" />
+                        </div>
+                        <div class="col-3">
+                            <strong>Đến ngày:</strong>
+                            <span t-esc="data['date_to']" />
+                        </div>
+                        <div class="col-3">
+                            <strong>Nhóm theo:</strong>
+                            <span
+                                t-esc="dict(report_data.fields_get(['group_by'])['group_by']['selection'])[data['group_by']]" />
+                        </div>
+                        <div class="col-3">
+                            <strong>Tạo lúc:</strong>
+                            <span
+                                t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')" />
+                        </div>
+                    </div>
+
+                    <!-- Tổng số liệu -->
+                    <div class="row mb32">
+                        <div class="col-12">
+                            <h3>Tổng Số Liệu</h3>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Tổng số token</th>
+                                    <th>Đang chờ</th>
+                                    <th>Đang phục vụ</th>
+                                    <th>Đã hoàn thành</th>
+                                    <th>Đã hủy</th>
+                                    <th>Khẩn cấp</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-esc="report_data['total_tokens']" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="report_data['waiting_tokens']" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="report_data['in_progress_tokens']" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="report_data['completed_tokens']" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="report_data['cancelled_tokens']" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="report_data['emergency_tokens']" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Thời gian trung bình -->
+                    <div class="row mb32">
+                        <div class="col-6">
+                            <h4>Thời gian phục vụ trung bình:</h4>
+                            <p class="h2 text-center">
+                                <span t-esc="'%.2f' % report_data['avg_service_time']" /> phút </p>
+                        </div>
+                        <div class="col-6">
+                            <h4>Thời gian chờ trung bình:</h4>
+                            <p class="h2 text-center">
+                                <span t-esc="'%.2f' % report_data['avg_waiting_time']" /> phút </p>
+                        </div>
+                    </div>
+
+                    <!-- Dữ liệu theo nhóm -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h3>Dữ Liệu Chi Tiết</h3>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Nhóm</th>
+                                        <th class="text-right">Tổng số</th>
+                                        <th class="text-right">Hoàn thành</th>
+                                        <th class="text-right">Hủy</th>
+                                        <th class="text-right">Khẩn cấp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="report_data['grouped_data']" t-as="group">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="group['name']" />
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="group['total']" />
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="group['completed']" />
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="group['cancelled']" />
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="group['emergency']" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Template báo cáo chi tiết - sẽ mở rộng từ báo cáo tổng quan -->
+    <template id="report_queue_detailed" inherit_id="hospital_queue_management.report_queue_summary"
+        primary="True">
+        <xpath expr="//h2" position="replace">
+            <h2>Báo Cáo Chi Tiết Hàng Đợi</h2>
+        </xpath>
+        <!-- Thêm các nội dung chi tiết khác tùy theo yêu cầu -->
+    </template>
+
+    <!-- Template báo cáo thời gian chờ -->
+    <template id="report_queue_waiting_time">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Báo Cáo Thời Gian Chờ</h2>
+
+                    <!-- Thông tin bộ lọc -->
+                    <div class="row mt32 mb32">
+                        <div class="col-3">
+                            <strong>Từ ngày:</strong>
+                            <span t-esc="data['date_from']" />
+                        </div>
+                        <div class="col-3">
+                            <strong>Đến ngày:</strong>
+                            <span t-esc="data['date_to']" />
+                        </div>
+                        <div class="col-3">
+                            <strong>Nhóm theo:</strong>
+                            <span
+                                t-esc="dict(report_data.fields_get(['group_by'])['group_by']['selection'])[data['group_by']]" />
+                        </div>
+                        <div class="col-3">
+                            <strong>Tạo lúc:</strong>
+                            <span
+                                t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')" />
+                        </div>
+                    </div>
+
+                    <!-- Nội dung báo cáo thời gian chờ -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h3>Thời Gian Chờ Theo <t
+                                    t-esc="dict(report_data.fields_get(['group_by'])['group_by']['selection'])[data['group_by']]" /></h3>
+
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Nhóm</th>
+                                        <th class="text-right">Số Token</th>
+                                        <th class="text-right">Thời Gian Chờ Trung Bình (phút)</th>
+                                        <th class="text-right">Thời Gian Chờ Tối Đa (phút)</th>
+                                        <th class="text-right">Thời Gian Chờ Tối Thiểu (phút)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="'waiting_times' in report_data">
+                                        <t t-foreach="report_data['waiting_times']" t-as="item">
+                                            <tr>
+                                                <td>
+                                                    <span t-esc="item['name']" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="item['count']" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f' % item['avg_wait_time']" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f' % item['max_wait_time']" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f' % item['min_wait_time']" />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Template báo cáo thời gian phục vụ -->
+    <template id="report_queue_service_time">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Báo Cáo Thời Gian Phục Vụ</h2>
+
+                    <!-- Thông tin bộ lọc -->
+                    <div class="row mt32 mb32">
+                        <div class="col-3">
+                            <strong>Từ ngày:</strong>
+                            <span t-esc="data['date_from']" />
+                        </div>
+                        <div class="col-3">
+                            <strong>Đến ngày:</strong>
+                            <span t-esc="data['date_to']" />
+                        </div>
+                        <div class="col-3">
+                            <strong>Nhóm theo:</strong>
+                            <span
+                                t-esc="dict(report_data.fields_get(['group_by'])['group_by']['selection'])[data['group_by']]" />
+                        </div>
+                        <div class="col-3">
+                            <strong>Tạo lúc:</strong>
+                            <span
+                                t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')" />
+                        </div>
+                    </div>
+
+                    <!-- Nội dung báo cáo thời gian phục vụ -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h3>Thời Gian Phục Vụ Theo <t
+                                    t-esc="dict(report_data.fields_get(['group_by'])['group_by']['selection'])[data['group_by']]" /></h3>
+
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Nhóm</th>
+                                        <th class="text-right">Số Token</th>
+                                        <th class="text-right">Thời Gian Phục Vụ Trung Bình (phút)</th>
+                                        <th class="text-right">Thời Gian Phục Vụ Tối Đa (phút)</th>
+                                        <th class="text-right">Thời Gian Phục Vụ Tối Thiểu (phút)</th>
+                                        <th class="text-right">Hiệu Suất (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-if="'service_times' in report_data">
+                                        <t t-foreach="report_data['service_times']" t-as="item">
+                                            <tr>
+                                                <td>
+                                                    <span t-esc="item['name']" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="item['count']" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f' % item['avg_service_time']" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f' % item['max_service_time']" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f' % item['min_service_time']" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="'%.2f' % item['efficiency']" />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Bệnh nhân 1: Phạm Minh Châu - VVIP -->
+        <record id="patient_pham_minh_chau" model="res.partner">
+            <field name="name">Phạm Minh Châu</field>
+            <field name="is_patient" eval="True"/>
+            <field name="patient_category">vvip</field>
+            <field name="patient_id_number">346536243</field>
+            <field name="date_of_birth">1985-03-15</field>
+            <field name="gender">female</field>
+            <field name="is_vip" eval="True"/>
+            <field name="current_service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Bệnh nhân 2: Hoàng Đức Minh - KH thường -->
+        <record id="patient_hoang_duc_minh" model="res.partner">
+            <field name="name">Hoàng Đức Minh</field>
+            <field name="is_patient" eval="True"/>
+            <field name="patient_category">normal</field>
+            <field name="patient_id_number">123456789</field>
+            <field name="date_of_birth">1978-07-22</field>
+            <field name="gender">male</field>
+            <field name="current_service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Bệnh nhân 3: Võ Thành Long - Trẻ em -->
+        <record id="patient_vo_thanh_long" model="res.partner">
+            <field name="name">Võ Thành Long</field>
+            <field name="is_patient" eval="True"/>
+            <field name="patient_category">child</field>
+            <field name="patient_id_number">435251346</field>
+            <field name="date_of_birth">2015-12-08</field>
+            <field name="gender">male</field>
+            <field name="current_service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Bệnh nhân 4: Đặng Thu Hương - Thai phụ -->
+        <record id="patient_dang_thu_huong" model="res.partner">
+            <field name="name">Đặng Thu Hương</field>
+            <field name="is_patient" eval="True"/>
+            <field name="patient_category">pregnant</field>
+            <field name="patient_id_number">243623532</field>
+            <field name="date_of_birth">1992-05-18</field>
+            <field name="gender">female</field>
+            <field name="is_pregnant" eval="True"/>
+            <field name="current_service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Bệnh nhân 5: Lý Văn Thành - NCCVCM -->
+        <record id="patient_ly_van_thanh" model="res.partner">
+            <field name="name">Lý Văn Thành</field>
+            <field name="is_patient" eval="True"/>
+            <field name="patient_category">nccvcm</field>
+            <field name="patient_id_number">436125211</field>
+            <field name="date_of_birth">1965-11-30</field>
+            <field name="gender">male</field>
+            <field name="current_service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Bệnh nhân 6: Bùi Thị Lan - Người già -->
+        <record id="patient_bui_thi_lan" model="res.partner">
+            <field name="name">Bùi Thị Lan</field>
+            <field name="is_patient" eval="True"/>
+            <field name="patient_category">elderly</field>
+            <field name="patient_id_number">783454152</field>
+            <field name="date_of_birth">1950-02-14</field>
+            <field name="gender">female</field>
+            <field name="current_service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Bệnh nhân 7: Trịnh Quang Huy - VIP -->
+        <record id="patient_trinh_quang_huy" model="res.partner">
+            <field name="name">Trịnh Quang Huy</field>
+            <field name="is_patient" eval="True"/>
+            <field name="patient_category">vip</field>
+            <field name="patient_id_number">123456790</field>
+            <field name="date_of_birth">1980-09-10</field>
+            <field name="gender">male</field>
+            <field name="is_vip" eval="True"/>
+            <field name="current_service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Bệnh nhân 8: Mai Xuân Vinh - thường -->
+        <record id="patient_mai_xuan_vinh" model="res.partner">
+            <field name="name">Mai Xuân Vinh</field>
+            <field name="is_patient" eval="True"/>
+            <field name="patient_category">normal</field>
+            <field name="patient_id_number">123456791</field>
+            <field name="date_of_birth">1975-04-25</field>
+            <field name="gender">male</field>
+            <field name="current_service_group_id" ref="service_group_registration"/>
+        </record>
+
+        <!-- Bệnh nhân 9: Phan Thị Kim Anh - Trẻ em -->
+        <record id="patient_phan_thi_kim_anh" model="res.partner">
+            <field name="name">Phan Thị Kim Anh</field>
+            <field name="is_patient" eval="True"/>
+            <field name="patient_category">child</field>
+            <field name="patient_id_number">435251347</field>
+            <field name="date_of_birth">2018-08-03</field>
+            <field name="gender">female</field>
+            <field name="current_service_group_id" ref="service_group_registration"/>
+        </record>
+    </data>
+</odoo>

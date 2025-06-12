@@ -1,0 +1,315 @@
++----------------------------------------------------------------------------------------------------------------+
+|                                          HỆ THỐNG TOKEN-BASED QUEUE                                             |
++----------------------------------------------------------------------------------------------------------------+
+                                                        |
+                          +------------------------------|-------------------------------+
+                          |                              |                               |
+                          v                              v                               v
++--------------------------+   +------------------------+   +---------------------------+
+| QUẢN LÝ BỆNH NHÂN        |   | HỆ THỐNG PHÂN PHỐI    |   | HỆ THỐNG THEO DÕI         |
+| VÀ TOKEN                 |   | VÀ CÂN BẰNG TẢI       |   | VÀ THÔNG BÁO              |
++--------------------------+   +------------------------+   +---------------------------+
+            |                              |                               |
+            v                              v                               v
++-----------------------------------------------------------------------------------------+
+|                                                                                         |
+|                                   QUY TRÌNH CHÍNH                                       |
+|                                                                                         |
+| +---------------------+     +----------------------+    +--------------------+          |
+| |                     |     |                      |    |                    |          |
+| | 1. BỆNH NHÂN ĐẾN    |---->| 2. ĐĂNG KÝ & PHÂN   |--->| 3. THỰC HIỆN       |          |
+| |    CHECK-IN         |     |    LOẠI ƯU TIÊN     |    |    DỊCH VỤ          |          |
+| |                     |     |                      |    |                    |          |
+| +---------------------+     +----------------------+    +--------------------+          |
+|          ^                            |                           |                     |
+|          |                            v                           v                     |
+| +---------------------+     +----------------------+    +--------------------+          |
+| |                     |     |                      |    |                    |          |
+| | 6. TIẾP TỤC HOẶC    |<----| 5. ĐỊNH TUYẾN DỊCH  |<---| 4. HOÀN THÀNH      |          |
+| |    KẾT THÚC         |     |    VỤ TIẾP THEO     |    |    DỊCH VỤ          |          |
+| |                     |     |                      |    |                    |          |
+| +---------------------+     +----------------------+    +--------------------+          |
+|                                                                                         |
++-----------------------------------------------------------------------------------------+
+            |                              |                               |
+            v                              v                               v
++-------------------------+   +-------------------------+   +---------------------------+
+|                         |   |                         |   |                           |
+| QUY TRÌNH PHÁT TOKEN    |   | QUY TRÌNH PHÂN PHÒNG    |   | QUY TRÌNH SẮP XẾP        |
+| VÀ XỬ LÝ ƯU TIÊN        |   | (HASH RULE)             |   | HÀNG ĐỢI (SORT RULE)     |
+|                         |   |                         |   |                           |
+| +-----------+           |   | +-----------+           |   | +-----------+             |
+| | Tạo Token |           |   | | Lấy danh  |           |   | | Sắp xếp   |             |
+| +-----------+           |   | | sách phòng|           |   | | theo ưu   |             |
+|       |                 |   | +-----------+           |   | | tiên &    |             |
+|       v                 |   |       |                 |   | | thời gian |             |
+| +-----------+           |   |       v                 |   | +-----------+             |
+| | Xác định  |           |   | +-----------+           |   |       |                   |
+| | mức ưu    |           |   | | Kiểm tra  |           |   |       v                   |
+| | tiên      |           |   | | mức ưu    |           |   | +-----------+             |
+| +-----------+           |   | | tiên      |           |   | | Cập nhật  |             |
+|       |                 |   | +-----------+           |   | | vị trí &  |             |
+|       v                 |   |       |                 |   | | thời gian |             |
+| +-----------+           |   |       v                 |   | | chờ       |             |
+| | Lưu token |           |   | +-----------+  Có       |   | +-----------+             |
+| | vào DB    |-----------|-->| | Ưu tiên?  |--------+  |   |       |                   |
+| +-----------+           |   | +-----------+        |  |   |       v                   |
+|       |                 |   |       | Không        |  |   | +-----------+             |
+|       |                 |   |       v              |  |   | | Thông báo |             |
+|       |                 |   | +-----------+        |  |   | | bệnh nhân |             |
+|       |                 |   | | Tính hash |        |  |   | +-----------+             |
+|       |                 |   | | value     |        |  |   |                           |
+|       |                 |   | +-----------+        |  |   | +-----------+             |
+|       |                 |   |       |              |  |   | | Trạng thái|             |
+|       |                 |   |       v              |  |   | | khẩn cấp  |<----+       |
+| +-----------+           |   | +-----------+        |  |   | +-----------+     |       |
+| | Trường hợp|           |   | | Phòng quá |  Có    |  |   |                   |       |
+| | khẩn cấp  |-----------|---|->| tải?     |--------|--|-----------------------+       |
+| +-----------+           |   | +-----------+        |  |   |                           |
+|       |                 |   |       | Không        |  |   |                           |
+|       v                 |   |       v              v  |   |                           |
+| +-----------+           |   | +-----------+  +-----------+                           |
+| | Lập ưu    |           |   | | Trả về    |  | Chọn phòng|                           |
+| | tiên cao  |-----------|---|->| phòng    |<-| ít tải   |                           |
+| | nhất      |           |   | +-----------+  +-----------+                           |
+| +-----------+           |   |                                                         |
++-------------------------+   +---------------------------------------------------------+
+
++-----------------------------------------------------------------------------------------+
+|                                                                                         |
+|                           HỆ THỐNG CÂN BẰNG TẢI TỰ ĐỘNG                                 |
+|                                                                                         |
+| +-----------+     +-----------+     +-----------+     +-----------+     +-----------+   |
+| | Kiểm tra  |---->| Xác định  |---->| Tìm phòng |---->| Chuyển    |---->| Thông báo |   |
+| | tải phòng |     | phòng quá |     | tương     |     | bệnh nhân |     | bệnh nhân |   |
+| |           |     | tải/nhàn  |     | thích     |     | sang phòng|     |           |   |
+| +-----------+     +-----------+     +-----------+     +-----------+     +-----------+   |
+|                          |                                                              |
+|                          | Kích hoạt mỗi 10 phút                                        |
+|                          v                                                              |
+| +-----------+     +-----------+     +-----------+                                       |
+| | Thu thập  |---->| Phân tích |---->| Báo cáo   |                                       |
+| | thống kê  |     | hiệu suất |     | cho quản  |                                       |
+| |           |     |           |     | trị       |                                       |
+| +-----------+     +-----------+     +-----------+                                       |
++-----------------------------------------------------------------------------------------+
+
++-----------------------------------------------------------------------------------------+
+|                                                                                         |
+|                             QUY TRÌNH ĐỊNH TUYẾN DỊCH VỤ                                |
+|                                                                                         |
+| +-----------+     +-----------+                                                         |
+| | Xác định  |---->| Lấy gói   |                                                         |
+| | dịch vụ   |     | khám      |                                                         |
+| | tiếp theo |     |           |                                                         |
+| +-----------+     +-----------+                                                         |
+|                          |                                                              |
+|                          v                                                              |
+|                   +-----------+                                                         |
+|                   | Kiểm tra  |                                                         |
+|                   | loại gói  |                                                         |
+|                   +-----------+                                                         |
+|                          |                                                              |
+|         +----------------+----------------+                                             |
+|         |                |                |                                             |
+|         v                v                v                                             |
+| +-----------+    +-----------+    +-----------+                                         |
+| | Basic     |    | Standard  |    | Premium   |                                         |
+| | (không    |    | (quy trình|    | (thêm dịch|                                         |
+| | siêu âm)  |    | chuẩn)    |    | vụ)       |                                         |
+| +-----------+    +-----------+    +-----------+                                         |
+|         |                |                |                                             |
+|         +----------------+----------------+                                             |
+|                          |                                                              |
+|                          v                                                              |
+|                   +-----------+      +-----------+                                      |
+|                   | Còn dịch  | Có   | Quay lại  |                                      |
+|                   | vụ tiếp?  |----->| cấp token |                                      |
+|                   +-----------+      +-----------+                                      |
+|                          |                                                              |
+|                         Không                                                           |
+|                          |                                                              |
+|                          v                                                              |
+|                   +-----------+                                                         |
+|                   | Hoàn thành|                                                         |
+|                   | quá trình |                                                         |
+|                   +-----------+                                                         |
++-----------------------------------------------------------------------------------------+
+
++-----------------------------------------------------------------------------------------+
+|                                                                                         |
+|                             CHÚ THÍCH QUY TRÌNH                                         |
+|                                                                                         |
+| 1. ĐĂNG KÝ & PHÂN LOẠI ƯU TIÊN:                                                        |
+|    - Phân loại theo: tuổi, bệnh lý, mang thai, khuyết tật                              |
+|    - Mức ưu tiên 0-5, khẩn cấp là 10                                                   |
+|                                                                                         |
+| 2. HASH RULE:                                                                           |
+|    - Sử dụng hash từ ID bệnh nhân để phân bổ phòng                                     |
+|    - Nếu phòng quá tải >150% → chuyển sang phòng ít tải                                |
+|    - Bệnh nhân ưu tiên luôn vào phòng ít tải nhất                                      |
+|                                                                                         |
+| 3. SORT RULE:                                                                           |
+|    - Sắp xếp theo ưu tiên (cao → thấp)                                                 |
+|    - Cùng ưu tiên → sắp xếp theo thời gian (sớm → muộn)                               |
+|    - Trường hợp khẩn cấp luôn ở đầu hàng đợi                                           |
+|                                                                                         |
+| 4. CÂN BẰNG TẢI:                                                                        |
+|    - Kiểm tra tự động mỗi 10 phút                                                       |
+|    - Phòng quá tải: thời gian chờ >30 phút                                             |
+|    - Phòng nhàn rỗi: thời gian chờ <10 phút                                            |
+|    - Chỉ chuyển tối đa 3 bệnh nhân mỗi lần                                             |
+|                                                                                         |
+| 5. QUY TRÌNH KHÁM:                                                                      |
+|    - Basic: đăng ký → dấu hiệu sinh tồn → XN máu → X-quang → khám chuyên khoa → kết thúc|
+|    - Standard: thêm siêu âm sau X-quang                                                |
+|    - Premium: thêm các dịch vụ chuyên sâu                                              |
++-----------------------------------------------------------------------------------------+
+
+
+Version 2: 
+    - Song Song giữa các luồng khám bệnh (Nhóm dịch vụ, cấu hình nhóm dịch vụ)
+    - Khoảng cách giữa các phòng khám: 
+        + Cấu hình khoảng cách(thời gian) giữa các phòng
+        + Thêm độ ưu tiên y tế
+    - Tranh chấp tài nguyên giữa heath-check với các dịch vụ khác:
+        + Cấu hình khám sức khỏe định kỳ 
+        + Đặt lịch phòng khám
+        + Chi phòng khám theo công suất (Công suất càng cao, thời gian chờ càng giảm) 
+        => time_wait = số lượng bệnh nhân chờ * timeTB/công suất
+        => tính toán thời gian chờ một cách chính xác nhất
+    - Tách module để có thể cài cắm từ bất kỳ đâu
+        + mudule base cần có một số điều kiện của queue base (model base, room,...)
+        + token thông minh phải được kế thừa từ module base
+
+
+
+WEIGHT_MOVEMENT = 0.4    # Trọng số cho thời gian di chuyển (40%)
+WEIGHT_WAITING = 0.35    # Trọng số cho thời gian chờ đợi (35%)
+WEIGHT_DURATION = 0.15   # Trọng số cho thời gian thực hiện (15%)
+WEIGHT_MEDICAL = 0.1     # Trọng số cho ưu tiên y tế (10%)
+
+
+# Tính tổng điểm (điểm thấp hơn = ưu tiên cao hơn)
+total_score = (
+    WEIGHT_MOVEMENT * movement_score + 
+    WEIGHT_WAITING * waiting_score + 
+    WEIGHT_DURATION * duration_score +
+    WEIGHT_MEDICAL * med_score
+)
+
+
+Cách hoạt động của công thức
+    Công suất = 1 (1 bác sĩ):
+    Thời gian chờ = 10 × 15 ÷ 1 = 150 phút
+
+    Công suất = 2 (2 bác sĩ hoặc 2 bàn khám):
+    Thời gian chờ = 10 × 15 ÷ 2 = 75 phút
+
+    Công suất = 5 (5 bác sĩ/bàn khám):
+    Thời gian chờ = 10 × 15 ÷ 5 = 30 phút
+
+
+# Xử lý theo khung giờ và loại dịch vụ
+if morning_start <= current_time <= morning_end:
+    # Buổi sáng chỉ phục vụ khám sức khỏe định kỳ
+    if service_type == 'health_check':
+        return self.capacity  # 100% công suất
+    else:
+        # Các dịch vụ khác được phục vụ hạn chế trong khung giờ này
+        return self.capacity * 0.2  # 20% công suất
+
+elif afternoon_start <= current_time <= afternoon_end:
+    # Buổi chiều phục vụ đa dạng nhưng ưu tiên khám thường
+    if service_type == 'health_check':
+        return self.capacity * 0.3  # 30% công suất
+    else:
+        return self.capacity * 0.7  # 70% công suất
+
+hospital_queue_management/(basic)
+├── init.py
+├── manifest.py
+├── controllers/
+│   ├── init.py
+│   └── main.py
+├── data/
+│   └── queue_data.xml
+├── models/
+│   ├── init.py
+│   ├── queue_room.py
+│   ├── queue_service.py
+│   ├── res_config_settings.py
+│   └── res_partner.py
+├── security/
+│   ├── ir.model.access.csv
+│   └── queue_security.xml
+├── static/
+│   └── ...
+├── views/
+│   ├── dashboard_views_basic.xml
+│   ├── partner_views_basic.xml
+│   ├── queue_room_views.xml
+│   ├── queue_service_views.xml
+│   └── queue_views_basic.xml
+└── report/
+    ├── init.py
+    └── basic_report_templates.xml
+
+
+
+ hospital_token_queue/
+├── init.py
+├── manifest.py
+├── hooks.py
+├── controllers/
+│   ├── init.py
+│   └── main.py
+├── data/
+│   ├── mail_template_data.xml
+│   ├── queue_room_distance_demo.xml
+│   ├── queue_service_group_demo.xml
+│   ├── room_reservation_demo.xml
+│   └── sms_template_data.xml
+├── models/
+│   ├── init.py
+│   ├── health_check_batch.py
+│   ├── queue_display.py
+│   ├── queue_priority.py
+│   ├── queue_room_distance.py
+│   ├── queue_room_reservation.py
+│   ├── queue_service_group.py
+│   └── queue_token.py
+├── security/
+│   ├── ir.model.access.csv
+│   └── token_security.xml
+├── static/
+│   ├── description/
+│   │   └── icon.png
+│   └── src/
+│       ├── css/
+│       ├── js/
+│       ├── scss/
+│       └── xml/
+├── views/
+│   ├── dashboard_views.xml
+│   ├── health_check_views.xml
+│   ├── partner_views_extended.xml
+│   ├── queue_display_views.xml
+│   ├── queue_priority_views.xml
+│   ├── queue_room_distance_views.xml
+│   ├── queue_room_views_extended.xml
+│   ├── queue_service_group_views.xml
+│   ├── queue_token_views.xml
+│   ├── queue_views_extended.xml
+│   └── room_reservation_views.xml
+├── wizard/
+│   ├── init.py
+│   ├── queue_generate_token_wizard.py
+│   ├── queue_generate_token_wizard_views.xml
+│   ├── queue_statistics_wizard.py
+│   └── queue_statistics_wizard_views.xml
+└── report/
+    ├── init.py
+    ├── queue_report.xml
+    ├── queue_statistics_report.py
+    └── queue_statistics_report_templates.xml

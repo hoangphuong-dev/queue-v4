@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_res_config_settings_form_queue" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.queue</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Quản Lý Hàng Đợi"
+                    string="Quản Lý Hàng Đợi" data-key="hospital_queue_management">
+                    <h2>Cấu Hình Hàng Đợi</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane" />
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Cân Bằng Tải Tự Động</span>
+                                <div class="text-muted">
+                                    Thiết lập thông số cho quy trình cân bằng tải tự động
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <label for="queue_auto_balance_interval"
+                                            class="o_light_label" />
+                                        <field
+                                            name="queue_auto_balance_interval" /> phút </div>
+                                    <div class="mt16">
+                                        <label for="queue_overload_threshold" class="o_light_label" />
+                                        <field
+                                            name="queue_overload_threshold" /> % </div>
+                                    <div class="mt16">
+                                        <label for="queue_wait_threshold" class="o_light_label" />
+                                        <field
+                                            name="queue_wait_threshold" /> phút </div>
+                                    <div class="mt16">
+                                        <label for="queue_max_patients_to_move"
+                                            class="o_light_label" />
+                                        <field
+                                            name="queue_max_patients_to_move" /> bệnh nhân </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Đoạn này cho phần cấu hình thông báo -->
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane" />
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Thông Báo Tự Động</span>
+                            <div class="text-muted">
+                                Cấu hình thông báo tự động cho bệnh nhân
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="queue_enable_sms" class="oe_inline" />
+                                <label
+                                        for="queue_enable_sms" class="o_light_label" /> Gửi SMS
+                                    thông báo </div>
+                                <div class="mt16">
+                                    <field name="queue_enable_email" class="oe_inline" />
+                                <label
+                                        for="queue_enable_email" class="o_light_label" /> Gửi Email
+                                    thông báo </div>
+                                <div class="mt16">
+                                    <field name="queue_sms_template_id" class="oe_inline"
+                                        invisible="queue_enable_sms == False" />
+                                </div>
+                                <div class="mt16">
+                                    <field name="queue_email_template_id" class="oe_inline"
+                                        invisible="queue_enable_email == False" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Phòng Đăng Ký 1 -->
+        <record id="room_reservation_reg_1" model="queue.room.reservation">
+            <field name="room_id" ref="room_registration_1" />
+            <field name="start_time">2025-04-25 10:00:00</field>
+            <field name="end_time">2025-04-26 10:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <!-- Phòng Đo Sinh Hiệu 1 -->
+        <record id="room_reservation_vital_1" model="queue.room.reservation">
+            <field name="room_id" ref="room_vitals_1" />
+            <field name="start_time">2025-04-25 10:00:00</field>
+            <field name="end_time">2025-04-26 10:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <!-- Phòng Xét Nghiệm 1 -->
+        <record id="room_reservation_lab_1" model="queue.room.reservation">
+            <field name="room_id" ref="room_blood_test_1" />
+            <field name="start_time">2025-04-25 10:00:00</field>
+            <field name="end_time">2025-04-26 10:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <!-- Phòng X-Quang 1 -->
+        <record id="room_reservation_xray_1" model="queue.room.reservation">
+            <field name="room_id" ref="room_xray_1" />
+            <field name="start_time">2025-04-25 10:00:00</field>
+            <field name="end_time">2025-04-26 10:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <!-- Phòng Siêu Âm 1 -->
+        <record id="room_reservation_ultra_1" model="queue.room.reservation">
+            <field name="room_id" ref="room_ultrasound_1" />
+            <field name="start_time">2025-04-25 10:00:00</field>
+            <field name="end_time">2025-04-26 10:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <!-- Phòng Siêu Âm 1 (buổi chiều) -->
+        <record id="room_reservation_ultra_1_afternoon" model="queue.room.reservation">
+            <field name="room_id" ref="room_ultrasound_1" />
+            <field name="start_time">2025-04-25 14:00:00</field>
+            <field name="end_time">2025-04-25 18:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <!-- Phòng Khám 1 -->
+        <record id="room_reservation_doctor_1" model="queue.room.reservation">
+            <field name="room_id" ref="room_doctor_1" />
+            <field name="start_time">2025-04-25 10:00:00</field>
+            <field name="end_time">2025-04-26 10:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <!-- Phòng Khám 2 -->
+        <record id="room_reservation_doctor_2" model="queue.room.reservation">
+            <field name="room_id" ref="room_doctor_2" />
+            <field name="start_time">2025-04-25 10:00:00</field>
+            <field name="end_time">2025-04-26 10:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <!-- Quầy Thuốc 1 -->
+        <record id="room_reservation_pharm_1" model="queue.room.reservation">
+            <field name="room_id" ref="room_pharmacy_1" />
+            <field name="start_time">2025-04-25 10:00:00</field>
+            <field name="end_time">2025-04-26 10:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <!-- Đặt lịch khám sức khỏe -->
+        <record id="room_reservation_health_check_1" model="queue.room.reservation">
+            <field name="room_id" ref="room_registration_1" />
+            <field name="start_time">2025-04-25 07:30:00</field>
+            <field name="end_time">2025-04-25 11:30:00</field>
+            <field name="service_type">health_check</field>
+            <field name="capacity_percentage">80</field>
+        </record>
+
+        <record id="room_reservation_health_check_2" model="queue.room.reservation">
+            <field name="room_id" ref="room_blood_test_1" />
+            <field name="start_time">2025-04-25 07:30:00</field>
+            <field name="end_time">2025-04-25 11:30:00</field>
+            <field name="service_type">health_check</field>
+            <field name="capacity_percentage">80</field>
+        </record>
+
+        <!-- Đặt lịch khẩn cấp -->
+        <record id="room_reservation_emergency_1" model="queue.room.reservation">
+            <field name="room_id" ref="room_doctor_1" />
+            <field name="start_time">2025-04-25 08:00:00</field>
+            <field name="end_time">2025-04-25 13:00:00</field>
+            <field name="service_type">emergency</field>
+            <field name="capacity_percentage">50</field>
+        </record>
+
+        <!-- Thêm một số đặt lịch cho các phòng mới -->
+        <record id="room_reservation_reg_2" model="queue.room.reservation">
+            <field name="room_id" ref="room_registration_2" />
+            <field name="start_time">2025-04-25 08:00:00</field>
+            <field name="end_time">2025-04-25 17:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <record id="room_reservation_lab_2" model="queue.room.reservation">
+            <field name="room_id" ref="room_blood_test_2" />
+            <field name="start_time">2025-04-25 08:00:00</field>
+            <field name="end_time">2025-04-25 16:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <record id="room_reservation_xray_2" model="queue.room.reservation">
+            <field name="room_id" ref="room_xray_2" />
+            <field name="start_time">2025-04-25 09:00:00</field>
+            <field name="end_time">2025-04-25 17:00:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+
+        <record id="room_reservation_doctor_3" model="queue.room.reservation">
+            <field name="room_id" ref="room_doctor_3" />
+            <field name="start_time">2025-04-25 08:30:00</field>
+            <field name="end_time">2025-04-25 17:30:00</field>
+            <field name="service_type">all</field>
+            <field name="capacity_percentage">100</field>
+        </record>
+    </data>
+</odoo>

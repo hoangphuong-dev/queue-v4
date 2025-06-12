@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Mẫu Email Thông Báo Token Mới -->
+        <record id="email_template_new_token" model="mail.template">
+            <field name="name">Thông báo phát hành token mới</field>
+            <field name="model_id" ref="model_queue_token" />
+            <field name="subject">Token của bạn: ${object.name}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="partner_to">${object.patient_id.id}</field>
+            <field name="body_html" type="html">
+                <div style="padding:0; margin:0; font-family:Arial, Helvetica, sans-serif;">
+                    <div
+                        style="background-color:#4A6A8F; padding:20px; color:white; text-align:center;">
+                        <h2 style="margin:0;">Thông Báo Token</h2>
+                    </div>
+                    <div style="padding:20px; border:1px solid #ddd;">
+                        <p>Kính gửi <strong>${object.patient_id.name}</strong>,</p>
+
+                        <p>Token của bạn đã được tạo thành công với thông tin chi tiết như sau:</p>
+
+                        <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+                            <tr style="background-color:#f8f9fa;">
+                                <th style="padding:10px; border:1px solid #ddd; text-align:left;">
+                                    Token</th>
+                                <td style="padding:10px; border:1px solid #ddd;">
+                                    <strong>${object.name}</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="padding:10px; border:1px solid #ddd; text-align:left;">Dịch
+                                    Vụ</th>
+                                <td style="padding:10px; border:1px solid #ddd;">
+                                    ${object.service_id.name}</td>
+                            </tr>
+                            <tr style="background-color:#f8f9fa;">
+                                <th style="padding:10px; border:1px solid #ddd; text-align:left;">
+                                    Phòng</th>
+                                <td style="padding:10px; border:1px solid #ddd;">
+                                    ${object.room_id.name}</td>
+                            </tr>
+                            <tr>
+                                <th style="padding:10px; border:1px solid #ddd; text-align:left;">Vị
+                                    Trí</th>
+                                <td style="padding:10px; border:1px solid #ddd;">${object.position}</td>
+                            </tr>
+                            <tr style="background-color:#f8f9fa;">
+                                <th style="padding:10px; border:1px solid #ddd; text-align:left;">Thời
+                                    Gian Chờ</th>
+                                <td style="padding:10px; border:1px solid #ddd;">${object.estimated_wait_time}
+                                    phút</td>
+                            </tr>
+                        </table>
+
+                        <p>Vui lòng đến phòng <strong>${object.room_id.name}</strong> và lưu ý theo
+                            dõi số thứ tự của bạn trên màn hình hiển thị.</p>
+
+                        <p>Xin cảm ơn.</p>
+                    </div>
+                    <div
+                        style="background-color:#f8f9fa; padding:10px; text-align:center; font-size:12px; color:#666;">
+                        <p>Đây là email tự động, vui lòng không trả lời.</p>
+                    </div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True" />
+            <field name="lang">${object.patient_id.lang}</field>
+        </record>
+
+        <!-- Mẫu Email Thông Báo Đến Lượt -->
+        <record id="email_template_token_called" model="mail.template">
+            <field name="name">Thông báo đến lượt</field>
+            <field name="model_id" ref="model_queue_token" />
+            <field name="subject">Đến lượt của bạn!</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="partner_to">${object.patient_id.id}</field>
+            <field name="body_html" type="html">
+                <div style="padding:0; margin:0; font-family:Arial, Helvetica, sans-serif;">
+                    <div
+                        style="background-color:#28a745; padding:20px; color:white; text-align:center;">
+                        <h2 style="margin:0;">ĐẾN LƯỢT CỦA BẠN</h2>
+                    </div>
+                    <div style="padding:20px; border:1px solid #ddd;">
+                        <p>Kính gửi <strong>${object.patient_id.name}</strong>,</p>
+
+                        <p style="font-size:18px;">Token <strong>${object.name}</strong> của bạn đã
+                            đến lượt!</p>
+
+                        <p>Vui lòng đến <strong>${object.room_id.name}</strong> ngay bây giờ.</p>
+
+                        <p>Nếu bạn không có mặt trong vòng 5 phút, token của bạn có thể bị bỏ qua.</p>
+
+                        <div style="text-align:center; margin:20px 0;">
+                            <span
+                                style="display:inline-block; background-color:#28a745; color:white; padding:15px 30px; font-size:20px; font-weight:bold; border-radius:5px;">
+                                ${object.name}
+                            </span>
+                        </div>
+                    </div>
+                    <div
+                        style="background-color:#f8f9fa; padding:10px; text-align:center; font-size:12px; color:#666;">
+                        <p>Đây là email tự động, vui lòng không trả lời.</p>
+                    </div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True" />
+            <field name="lang">${object.patient_id.lang}</field>
+        </record>
+
+        <!-- Mẫu Email Thông Báo Chuyển Phòng -->
+        <record id="email_template_room_change" model="mail.template">
+            <field name="name">Thông báo chuyển phòng</field>
+            <field name="model_id" ref="model_queue_token" />
+            <field name="subject">Thông báo chuyển phòng cho token ${object.name}</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="partner_to">${object.patient_id.id}</field>
+            <field name="body_html" type="html">
+                <div style="padding:0; margin:0; font-family:Arial, Helvetica, sans-serif;">
+                    <div
+                        style="background-color:#007bff; padding:20px; color:white; text-align:center;">
+                        <h2 style="margin:0;">THÔNG BÁO CHUYỂN PHÒNG</h2>
+                    </div>
+                    <div style="padding:20px; border:1px solid #ddd;">
+                        <p>Kính gửi <strong>${object.patient_id.name}</strong>,</p>
+
+                        <p>Token <strong>${object.name}</strong> của bạn đã được chuyển sang phòng
+                            khác để giảm thời gian chờ đợi.</p>
+
+                        <div
+                            style="background-color:#f8f9fa; padding:15px; margin:15px 0; border-left:5px solid #007bff;">
+                            <p><strong>Phòng mới:</strong> ${object.room_id.name}</p>
+                            <p><strong>Vị trí trong hàng:</strong> ${object.position}</p>
+                            <p><strong>Thời gian chờ ước tính:</strong>
+                                ${object.estimated_wait_time} phút</p>
+                        </div>
+
+                        <p>Vui lòng di chuyển đến phòng mới và tiếp tục theo dõi số thứ tự của bạn
+                            trên màn hình hiển thị.</p>
+
+                        <p>Xin cảm ơn vì sự hợp tác của bạn.</p>
+                    </div>
+                    <div
+                        style="background-color:#f8f9fa; padding:10px; text-align:center; font-size:12px; color:#666;">
+                        <p>Đây là email tự động, vui lòng không trả lời.</p>
+                    </div>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True" />
+            <field name="lang">${object.patient_id.lang}</field>
+        </record>
+    </data>
+</odoo>

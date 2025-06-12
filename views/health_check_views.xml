@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Health Check Batch Form View -->
+    <record id="view_health_check_batch_form" model="ir.ui.view">
+        <field name="name">health.check.batch.form</field>
+        <field name="model">health.check.batch</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_create_reservations" type="object" string="Tạo Đặt Lịch"
+                        class="oe_highlight" invisible="state != 'draft'" />
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,planned,in_progress,completed" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" />
+                            <field name="patient_count" />
+                        </group>
+                        <group>
+                            <field name="start_date" />
+                            <field name="end_date" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Danh Sách Bệnh Nhân">
+                            <field name="patient_ids" />
+                        </page>
+                        <page string="Danh Sách Token">
+                            <!-- Chỉ hiển thị danh sách token mà không chỉ định các trường để tránh
+                            lỗi -->
+                            <field name="token_ids" readonly="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Health Check Batch Tree View -->
+    <record id="view_health_check_batch_list" model="ir.ui.view">
+        <field name="name">health.check.batch.list</field>
+        <field name="model">health.check.batch</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="company_id" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="patient_count" />
+                <field name="state" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Health Check Batch Action -->
+    <record id="action_health_check_batch" model="ir.actions.act_window">
+        <field name="name">Đợt Khám Sức Khỏe</field>
+        <field name="res_model">health.check.batch</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Health Check Menu -->
+    <menuitem id="menu_health_check"
+        name="Khám Sức Khỏe Định Kỳ"
+        parent="menu_hospital_queue_root"
+        sequence="15" />
+
+    <menuitem id="menu_health_check_batch"
+        name="Đợt Khám Sức Khỏe"
+        parent="menu_health_check"
+        action="action_health_check_batch"
+        sequence="10" />
+</odoo>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View: Service Group -->
+    <record id="view_queue_service_group_form" model="ir.ui.view">
+        <field name="name">queue.service.group.form</field>
+        <field name="model">queue.service.group</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên nhóm dịch vụ..." />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="sequence" />
+                            <field name="active" />
+                        </group>
+                        <group>
+                            <field name="is_required" />
+                            <field name="completion_policy" />
+                            <field name="custom_rule" widget="ace" options="{'mode': 'python'}"
+                                invisible="completion_policy != 'custom'"
+                                required="completion_policy == 'custom'" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Dịch Vụ Trong Nhóm">
+                            <field name="service_ids">
+                                <list>
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name" />
+                                    <field name="code" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Mô Tả">
+                            <field name="description"
+                                placeholder="Mô tả chi tiết về nhóm dịch vụ..." />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View: Service Group -->
+    <record id="view_queue_service_group_list" model="ir.ui.view">
+        <field name="name">queue.service.group.list</field>
+        <field name="model">queue.service.group</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="code" />
+                <field name="completion_policy" />
+                <field name="is_required" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Action: Service Group -->
+    <record id="action_queue_service_group" model="ir.actions.act_window">
+        <field name="name">Nhóm Dịch Vụ</field>
+        <field name="res_model">queue.service.group</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo nhóm dịch vụ đầu tiên
+            </p>
+            <p>
+                Tạo các nhóm dịch vụ có thể thực hiện song song.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu: Service Group -->
+    <menuitem id="menu_hospital_queue_service_group"
+        name="Nhóm Dịch Vụ"
+        parent="menu_hospital_queue_config"
+        action="action_queue_service_group"
+        sequence="15" />
+
+
+    <!-- Form View: Service Group Route -->
+    <record id="view_queue_service_group_route_form" model="ir.ui.view">
+        <field name="name">queue.service.group.route.form</field>
+        <field name="model">queue.service.group.route</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="group_from_id" required="1" />
+                            <field name="group_to_id" required="1" />
+                            <field name="sequence" />
+                        </group>
+                        <group>
+                            <field name="package_id" />
+                            <field name="condition" widget="ace" options="{'mode': 'python'}" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View: Service Group Route -->
+    <record id="view_queue_service_group_route_list" model="ir.ui.view">
+        <field name="name">queue.service.group.route.list</field>
+        <field name="model">queue.service.group.route</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle" />
+                <field name="group_from_id" />
+                <field name="group_to_id" />
+                <field name="package_id" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Action: Service Group Route -->
+    <record id="action_queue_service_group_route" model="ir.actions.act_window">
+        <field name="name">Tuyến Đường Nhóm Dịch Vụ</field>
+        <field name="res_model">queue.service.group.route</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo tuyến đường nhóm dịch vụ đầu tiên
+            </p>
+            <p>
+                Định nghĩa luồng di chuyển giữa các nhóm dịch vụ.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu: Service Group Route -->
+    <menuitem id="menu_hospital_queue_service_group_route"
+        name="Tuyến Đường Nhóm Dịch Vụ"
+        parent="menu_hospital_queue_config"
+        action="action_queue_service_group_route"
+        sequence="16" />
+
+</odoo>

@@ -1,0 +1,53 @@
+.o_kanban_view .oe_kanban_card {
+    margin-bottom: 10px;
+
+    .o_kanban_record_title {
+        font-size: 16px;
+        color: #4A6A8F;
+    }
+
+    .o_kanban_record_subtitle {
+        color: #666;
+        font-size: 12px;
+    }
+
+    .row {
+        margin: 0;
+
+        .col-4,
+        .col-6 {
+            padding: 2px;
+        }
+    }
+
+    small {
+        font-size: 11px;
+    }
+}
+
+// Badge styling cho patient category
+.o_kanban_view .oe_kanban_card {
+    &[data-category="vvip"] {
+        border-left: 4px solid #dc3545;
+    }
+
+    &[data-category="vip"] {
+        border-left: 4px solid #ffc107;
+    }
+
+    &[data-category="pregnant"] {
+        border-left: 4px solid #e83e8c;
+    }
+
+    &[data-category="child"] {
+        border-left: 4px solid #17a2b8;
+    }
+
+    &[data-category="elderly"] {
+        border-left: 4px solid #6f42c1;
+    }
+
+    &[data-category="nccvcm"] {
+        border-left: 4px solid #28a745;
+    }
+}

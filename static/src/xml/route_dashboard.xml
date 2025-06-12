@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hospital_queue_management.RouteDashboard">
+        <div class="o_route_dashboard h-100 d-flex flex-column">
+            <!-- Header -->
+            <div class="o_control_panel d-flex justify-content-between align-items-center p-3 border-bottom">
+                <h2 class="mb-0">Sơ Đồ Tuyến Đường Dịch Vụ</h2>
+                <div>
+                    <button class="btn btn-primary" t-on-click="onCreateRoute">
+                        <i class="fa fa-plus"/> Tạo Tuyến Đường
+                    </button>
+                    <button class="btn btn-info ms-2" t-on-click="onViewStatistics">
+                        <i class="fa fa-bar-chart"/> Thống Kê
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-grow-1 p-3 overflow-auto">
+                <t t-if="state.isLoading">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <svg class="w-100" style="height: 600px;">
+                        <!-- Draw connections first -->
+                        <t t-foreach="state.routes" t-as="route" t-key="route.id">
+                            <t t-set="conn" t-value="getRouteConnection(route)"/>
+                            <line t-att-x1="conn.from.x" 
+                                  t-att-y1="conn.from.y"
+                                  t-att-x2="conn.to.x" 
+                                  t-att-y2="conn.to.y"
+                                  stroke="#28a745" 
+                                  stroke-width="2"
+                                  marker-end="url(#arrowhead)"/>
+                            <text t-att-x="(conn.from.x + conn.to.x) / 2" 
+                                  t-att-y="(conn.from.y + conn.to.y) / 2 - 10"
+                                  text-anchor="middle" 
+                                  font-size="12" 
+                                  fill="#666">
+                                <t t-out="route.package_id[1] || 'Tất cả'"/>
+                            </text>
+                        </t>
+
+                        <!-- Draw groups -->
+                        <t t-foreach="state.groups" t-as="group" t-key="group.id">
+                            <t t-set="pos" t-value="getGroupPosition(group.id, group_index)"/>
+                            <g t-att-transform="`translate(${pos.x}, ${pos.y})`"
+                               t-on-click="() => onGroupClick(group.id)"
+                               style="cursor: pointer;">
+                                <circle r="60" 
+                                        t-att-fill="state.selectedGroup === group.id ? '#0d6efd' : '#4A6A8F'"
+                                        stroke="white" 
+                                        stroke-width="3"/>
+                                <text text-anchor="middle" 
+                                      y="5" 
+                                      fill="white" 
+                                      font-weight="bold">
+                                    <t t-out="group.name"/>
+                                </text>
+                            </g>
+                        </t>
+
+                        <!-- Arrow marker -->
+                        <defs>
+                            <marker id="arrowhead" 
+                                    markerWidth="10" 
+                                    markerHeight="7"
+                                    refX="9" 
+                                    refY="3.5" 
+                                    orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#28a745"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Khoảng cách giữa phòng đăng ký và các phòng khác -->
+        <record id="distance_reg1_to_vital1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_registration_1" />
+            <field name="room_to_id" ref="room_vitals_1" />
+            <field name="distance">1</field>
+            <field name="travel_time">0.5</field>
+        </record>
+
+        <record id="distance_reg1_to_blood1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_registration_1" />
+            <field name="room_to_id" ref="room_blood_test_1" />
+            <field name="distance">2</field>
+            <field name="travel_time">1.5</field>
+        </record>
+
+        <record id="distance_reg1_to_xray1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_registration_1" />
+            <field name="room_to_id" ref="room_xray_1" />
+            <field name="distance">4</field>
+            <field name="travel_time">3</field>
+        </record>
+
+        <record id="distance_reg1_to_ultra1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_registration_1" />
+            <field name="room_to_id" ref="room_ultrasound_1" />
+            <field name="distance">4</field>
+            <field name="travel_time">3</field>
+        </record>
+
+        <record id="distance_reg1_to_doc1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_registration_1" />
+            <field name="room_to_id" ref="room_doctor_1" />
+            <field name="distance">3</field>
+            <field name="travel_time">2</field>
+        </record>
+
+        <record id="distance_reg1_to_pharm1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_registration_1" />
+            <field name="room_to_id" ref="room_pharmacy_1" />
+            <field name="distance">5</field>
+            <field name="travel_time">4</field>
+        </record>
+
+        <!-- Khoảng cách từ phòng đo sinh hiệu đến các phòng khác -->
+        <record id="distance_vital1_to_blood1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_vitals_1" />
+            <field name="room_to_id" ref="room_blood_test_1" />
+            <field name="distance">2</field>
+            <field name="travel_time">1.5</field>
+        </record>
+
+        <record id="distance_vital1_to_xray1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_vitals_1" />
+            <field name="room_to_id" ref="room_xray_1" />
+            <field name="distance">3</field>
+            <field name="travel_time">2</field>
+        </record>
+
+        <record id="distance_vital1_to_ultra1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_vitals_1" />
+            <field name="room_to_id" ref="room_ultrasound_1" />
+            <field name="distance">3</field>
+            <field name="travel_time">2</field>
+        </record>
+
+        <record id="distance_vital1_to_doc1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_vitals_1" />
+            <field name="room_to_id" ref="room_doctor_1" />
+            <field name="distance">4</field>
+            <field name="travel_time">3</field>
+        </record>
+
+        <!-- Khoảng cách từ phòng xét nghiệm máu đến các phòng khác -->
+        <record id="distance_blood1_to_xray1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_blood_test_1" />
+            <field name="room_to_id" ref="room_xray_1" />
+            <field name="distance">3</field>
+            <field name="travel_time">2</field>
+        </record>
+
+        <record id="distance_blood1_to_ultra1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_blood_test_1" />
+            <field name="room_to_id" ref="room_ultrasound_1" />
+            <field name="distance">2</field>
+            <field name="travel_time">1.5</field>
+        </record>
+
+        <record id="distance_blood1_to_doc1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_blood_test_1" />
+            <field name="room_to_id" ref="room_doctor_1" />
+            <field name="distance">4</field>
+            <field name="travel_time">3</field>
+        </record>
+
+        <record id="distance_blood1_to_doc2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_blood_test_1" />
+            <field name="room_to_id" ref="room_doctor_2" />
+            <field name="distance">4</field>
+            <field name="travel_time">3</field>
+        </record>
+
+        <!-- Khoảng cách từ phòng X-quang đến các phòng khác -->
+        <record id="distance_xray1_to_ultra1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_xray_1" />
+            <field name="room_to_id" ref="room_ultrasound_1" />
+            <field name="distance">1</field>
+            <field name="travel_time">0.5</field>
+        </record>
+
+        <record id="distance_xray1_to_doc1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_xray_1" />
+            <field name="room_to_id" ref="room_doctor_1" />
+            <field name="distance">3</field>
+            <field name="travel_time">2</field>
+        </record>
+
+        <record id="distance_xray1_to_doc2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_xray_1" />
+            <field name="room_to_id" ref="room_doctor_2" />
+            <field name="distance">3</field>
+            <field name="travel_time">2</field>
+        </record>
+
+        <!-- Khoảng cách từ phòng siêu âm đến phòng khám -->
+        <record id="distance_ultra1_to_doc1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_ultrasound_1" />
+            <field name="room_to_id" ref="room_doctor_1" />
+            <field name="distance">3</field>
+            <field name="travel_time">2</field>
+        </record>
+
+        <record id="distance_ultra1_to_doc2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_ultrasound_1" />
+            <field name="room_to_id" ref="room_doctor_2" />
+            <field name="distance">3</field>
+            <field name="travel_time">2</field>
+        </record>
+
+        <!-- Khoảng cách giữa các phòng khám -->
+        <record id="distance_doc1_to_doc2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_doctor_1" />
+            <field name="room_to_id" ref="room_doctor_2" />
+            <field name="distance">1</field>
+            <field name="travel_time">0.5</field>
+        </record>
+
+        <record id="distance_doc1_to_doc3" model="queue.room.distance">
+            <field name="room_from_id" ref="room_doctor_1" />
+            <field name="room_to_id" ref="room_doctor_3" />
+            <field name="distance">2</field>
+            <field name="travel_time">1</field>
+        </record>
+
+        <record id="distance_doc1_to_doc4" model="queue.room.distance">
+            <field name="room_from_id" ref="room_doctor_1" />
+            <field name="room_to_id" ref="room_doctor_4" />
+            <field name="distance">3</field>
+            <field name="travel_time">2</field>
+        </record>
+
+        <!-- Khoảng cách từ phòng khám đến quầy thuốc -->
+        <record id="distance_doc1_to_pharm1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_doctor_1" />
+            <field name="room_to_id" ref="room_pharmacy_1" />
+            <field name="distance">2</field>
+            <field name="travel_time">1</field>
+        </record>
+
+        <record id="distance_doc2_to_pharm1" model="queue.room.distance">
+            <field name="room_from_id" ref="room_doctor_2" />
+            <field name="room_to_id" ref="room_pharmacy_1" />
+            <field name="distance">2</field>
+            <field name="travel_time">1</field>
+        </record>
+
+        <record id="distance_doc3_to_pharm2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_doctor_3" />
+            <field name="room_to_id" ref="room_pharmacy_2" />
+            <field name="distance">2</field>
+            <field name="travel_time">1</field>
+        </record>
+
+        <record id="distance_doc4_to_pharm2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_doctor_4" />
+            <field name="room_to_id" ref="room_pharmacy_2" />
+            <field name="distance">2</field>
+            <field name="travel_time">1</field>
+        </record>
+
+        <!-- Khoảng cách giữa các phòng cùng dịch vụ -->
+        <record id="distance_reg1_to_reg2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_registration_1" />
+            <field name="room_to_id" ref="room_registration_2" />
+            <field name="distance">0.5</field>
+            <field name="travel_time">0.2</field>
+        </record>
+
+        <record id="distance_vital1_to_vital2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_vitals_1" />
+            <field name="room_to_id" ref="room_vitals_2" />
+            <field name="distance">0.5</field>
+            <field name="travel_time">0.2</field>
+        </record>
+
+        <record id="distance_blood1_to_blood2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_blood_test_1" />
+            <field name="room_to_id" ref="room_blood_test_2" />
+            <field name="distance">0.5</field>
+            <field name="travel_time">0.2</field>
+        </record>
+
+        <record id="distance_xray1_to_xray2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_xray_1" />
+            <field name="room_to_id" ref="room_xray_2" />
+            <field name="distance">1</field>
+            <field name="travel_time">0.5</field>
+        </record>
+
+        <record id="distance_ultra1_to_ultra2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_ultrasound_1" />
+            <field name="room_to_id" ref="room_ultrasound_2" />
+            <field name="distance">1</field>
+            <field name="travel_time">0.5</field>
+        </record>
+
+        <record id="distance_pharm1_to_pharm2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_pharmacy_1" />
+            <field name="room_to_id" ref="room_pharmacy_2" />
+            <field name="distance">1</field>
+            <field name="travel_time">0.5</field>
+        </record>
+
+        <!-- Khoảng cách từ phòng đăng ký 2 đến các phòng khác -->
+        <record id="distance_reg2_to_vital2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_registration_2" />
+            <field name="room_to_id" ref="room_vitals_2" />
+            <field name="distance">1</field>
+            <field name="travel_time">0.5</field>
+        </record>
+
+        <record id="distance_reg2_to_blood2" model="queue.room.distance">
+            <field name="room_from_id" ref="room_registration_2" />
+            <field name="room_to_id" ref="room_blood_test_2" />
+            <field name="distance">2.5</field>
+            <field name="travel_time">1.8</field>
+        </record>
+    </data>
+</odoo>

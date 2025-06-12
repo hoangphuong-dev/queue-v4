@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View: Khoảng Cách Phòng -->
+    <record id="view_queue_room_distance_form" model="ir.ui.view">
+        <field name="name">queue.room.distance.form</field>
+        <field name="model">queue.room.distance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="room_from_id" options="{'no_create': True}" />
+                            <field name="room_to_id" options="{'no_create': True}" />
+                        </group>
+                        <group>
+                            <field name="distance" />
+                            <field name="travel_time" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View: Khoảng Cách Phòng -->
+    <record id="view_queue_room_distance_tree" model="ir.ui.view">
+        <field name="name">queue.room.distance.list</field>
+        <field name="model">queue.room.distance</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="room_from_id" />
+                <field name="room_to_id" />
+                <field name="distance" />
+                <field name="travel_time" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View: Khoảng Cách Phòng -->
+    <record id="view_queue_room_distance_search" model="ir.ui.view">
+        <field name="name">queue.room.distance.search</field>
+        <field name="model">queue.room.distance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="room_from_id" />
+                <field name="room_to_id" />
+                <group expand="0" string="Group By">
+                    <filter string="Từ Phòng" name="group_by_from"
+                        context="{'group_by': 'room_from_id'}" />
+                    <filter string="Đến Phòng" name="group_by_to"
+                        context="{'group_by': 'room_to_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action: Khoảng Cách Phòng -->
+    <record id="action_queue_room_distance" model="ir.actions.act_window">
+        <field name="name">Khoảng Cách Giữa Các Phòng</field>
+        <field name="res_model">queue.room.distance</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo khoảng cách giữa các phòng đầu tiên
+            </p>
+            <p>
+                Thiết lập khoảng cách tương đối giữa các phòng để hệ thống có thể tối ưu lộ trình
+                của bệnh nhân.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu: Khoảng Cách Phòng -->
+    <menuitem id="menu_queue_room_distance"
+        name="Khoảng Cách Giữa Các Phòng"
+        parent="menu_hospital_queue_config"
+        action="action_queue_room_distance"
+        sequence="45" />
+</odoo>

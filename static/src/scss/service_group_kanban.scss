@@ -1,0 +1,65 @@
+.o_service_group_kanban {
+    display: flex;
+    flex-direction: row;
+
+    .o_kanban_group {
+        min-width: 280px;
+        max-width: 320px;
+        border-radius: 8px;
+        margin-right: 16px;
+        background-color: #f8f9fa;
+
+        .o_kanban_header {
+            background-color: #4A6A8F;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px 8px 0 0;
+
+            .o_kanban_header_title {
+                font-weight: bold;
+                font-size: 1.1em;
+            }
+        }
+
+        .o_service_group_kanban_record {
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            margin: 8px;
+            transition: all 0.2s ease;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+            }
+
+            &.o_dragged {
+                transform: rotate(2deg) scale(1.05);
+                border: 2px dashed #4A6A8F;
+            }
+        }
+
+        .o_kanban_load_more {
+            text-align: center;
+            margin: 10px;
+        }
+    }
+
+    .o_kanban_group.o_column_dragged {
+        border: 2px dashed #4A6A8F;
+        background-color: rgba(74, 106, 143, 0.1);
+    }
+
+    .o_kanban_group.o_column_highlight {
+        background-color: rgba(74, 106, 143, 0.2);
+    }
+}
+
+.route-arrow {
+    position: absolute;
+    top: 50%;
+    right: -10px;
+    transform: translateY(-50%);
+    color: #4A6A8F;
+    font-size: 20px;
+}

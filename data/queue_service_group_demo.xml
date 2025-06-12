@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Nhóm Dịch Vụ Demo -->
+        <record id="service_group_registration" model="queue.service.group">
+            <field name="name">Đăng Ký và Đo Sinh Hiệu</field>
+            <field name="code">REG_VITAL</field>
+            <field name="sequence">1</field>
+            <field name="is_required">True</field>
+            <field name="completion_policy">all</field>
+            <field name="service_ids"
+                eval="[(6, 0, [
+                ref('service_registration'),
+                ref('service_vitals')
+            ])]" />
+            <field name="description">Nhóm dịch vụ đầu tiên bao gồm đăng ký và đo các dấu hiệu sinh
+                tồn</field>
+        </record>
+
+        <record id="service_group_tests" model="queue.service.group">
+            <field name="name">Xét Nghiệm Cơ Bản</field>
+            <field name="code">BASIC_TESTS</field>
+            <field name="sequence">2</field>
+            <field name="is_required">True</field>
+            <field name="completion_policy">all</field>
+            <field name="service_ids"
+                eval="[(6, 0, [
+                ref('service_blood_test'),
+                ref('service_xray')
+            ])]" />
+            <field name="description">Các xét nghiệm cơ bản bao gồm xét nghiệm máu và chụp X-quang</field>
+        </record>
+
+        <record id="service_group_advanced_tests" model="queue.service.group">
+            <field name="name">Xét Nghiệm Nâng Cao</field>
+            <field name="code">ADV_TESTS</field>
+            <field name="sequence">3</field>
+            <field name="is_required">False</field>
+            <field name="completion_policy">any</field>
+            <field name="service_ids"
+                eval="[(6, 0, [
+                ref('service_ultrasound')
+            ])]" />
+            <field name="description">Các xét nghiệm nâng cao như siêu âm, chỉ áp dụng cho gói tiêu
+                chuẩn</field>
+        </record>
+
+        <record id="service_group_consultation" model="queue.service.group">
+            <field name="name">Khám và Kê Đơn</field>
+            <field name="code">CONSULT</field>
+            <field name="sequence">4</field>
+            <field name="is_required">True</field>
+            <field name="completion_policy">all</field>
+            <field name="service_ids"
+                eval="[(6, 0, [
+                ref('service_doctor'),
+                ref('service_pharmacy')
+            ])]" />
+            <field name="description">Khám với bác sĩ và nhận thuốc</field>
+        </record>
+
+        <!-- Tuyến Đường Nhóm Dịch Vụ -->
+        <record id="group_route_reg_to_tests" model="queue.service.group.route">
+            <field name="group_from_id" ref="service_group_registration" />
+            <field name="group_to_id" ref="service_group_tests" />
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Tuyến đường cho gói cơ bản: Từ xét nghiệm cơ bản đến khám bác sĩ -->
+        <record id="group_route_tests_to_consultation_basic" model="queue.service.group.route">
+            <field name="group_from_id" ref="service_group_tests" />
+            <field name="group_to_id" ref="service_group_consultation" />
+            <field name="sequence">10</field>
+            <field name="package_id" ref="package_basic" />
+        </record>
+
+        <!-- Tuyến đường cho gói tiêu chuẩn: Từ xét nghiệm cơ bản đến xét nghiệm nâng cao -->
+        <record id="group_route_tests_to_advanced_tests" model="queue.service.group.route">
+            <field name="group_from_id" ref="service_group_tests" />
+            <field name="group_to_id" ref="service_group_advanced_tests" />
+            <field name="sequence">10</field>
+            <field name="package_id" ref="package_standard" />
+        </record>
+
+        <!-- Tuyến đường cho gói tiêu chuẩn: Từ xét nghiệm nâng cao đến khám bác sĩ -->
+        <record id="group_route_advanced_tests_to_consultation" model="queue.service.group.route">
+            <field name="group_from_id" ref="service_group_advanced_tests" />
+            <field name="group_to_id" ref="service_group_consultation" />
+            <field name="sequence">10</field>
+            <field name="package_id" ref="package_standard" />
+        </record>
+
+        <!-- Các nhóm song song có thể thực hiện cùng lúc -->
+        <record id="service_group_parallel_tests" model="queue.service.group">
+            <field name="name">Xét Nghiệm Song Song</field>
+            <field name="code">PARALLEL_TESTS</field>
+            <field name="sequence">2</field>
+            <field name="is_required">False</field>
+            <field name="completion_policy">all</field>
+            <field name="service_ids"
+                eval="[(6, 0, [
+                        ref('service_blood_test'),
+                        ref('service_xray'),
+                        ref('service_ultrasound')
+                    ])]" />
+            <field name="description">Nhóm này bao gồm các xét nghiệm có thể được thực hiện song
+                song để tiết kiệm thời gian</field>
+        </record>
+
+        <!-- Tuyến đường sử dụng nhóm song song -->
+        <record id="group_route_reg_to_parallel" model="queue.service.group.route">
+            <field name="group_from_id" ref="service_group_registration" />
+            <field name="group_to_id" ref="service_group_parallel_tests" />
+            <field name="sequence">5</field>
+            <field name="condition">patient.is_vip == True</field>
+        </record>
+
+        <record id="group_route_parallel_to_consultation" model="queue.service.group.route">
+            <field name="group_from_id" ref="service_group_parallel_tests" />
+            <field name="group_to_id" ref="service_group_consultation" />
+            <field name="sequence">5</field>
+        </record>
+
+        <!-- Cập nhật bệnh nhân với nhóm dịch vụ hiện tại -->
+        <!-- <record id="patient_1" model="res.partner">
+            <field name="current_service_group_id" ref="service_group_registration" />
+        </record>
+
+        <record id="patient_2" model="res.partner">
+            <field name="current_service_group_id" ref="service_group_registration" />
+        </record>
+
+        <record id="patient_3" model="res.partner">
+            <field name="current_service_group_id" ref="service_group_registration" />
+        </record> -->
+    </data>
+</odoo>

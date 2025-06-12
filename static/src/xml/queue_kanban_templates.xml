@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="QueueKanbanView.buttons">
+        <div class="o_kanban_buttons_wrapper">
+            <t t-if="widget.hasButtons">
+                <div class="o_kanban_buttons">
+                    <button type="button" class="btn btn-primary o_kanban_add_column">Tạo Token Mới</button>
+                    <button type="button" class="btn btn-secondary o_queue_refresh">
+                        <i class="fa fa-refresh"/> Làm Mới
+                    </button>
+                    <button type="button" class="btn btn-info o_queue_balance">
+                        <i class="fa fa-balance-scale"/> Cân Bằng Tải
+                    </button>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
